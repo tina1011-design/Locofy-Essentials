@@ -1,5 +1,6 @@
 import * as React from "react";
 import { StyleSheet, View, Text } from "react-native";
+import { Image } from "expo-image";
 import ValueIcon from "./ValueIcon";
 import ProgressBar1 from "./ProgressBar1";
 import {
@@ -18,21 +19,46 @@ import {
 export type QuestCardMType = {
   showProgressBar?: boolean;
   showIconCash?: boolean;
+  progressWidth?: number;
 
   /** Variant props */
-  property1?: string;
+  property1?: "blue" | "alert";
 };
 
 const QuestCardM = ({
   property1 = "blue",
   showProgressBar = true,
   showIconCash,
+  progressWidth = 30,
 }: QuestCardMType) => {
+  const isAlert = property1 === "alert";
+  
+  const cardStyles = {
+    backgroundColor: isAlert ? Color.questCardAlertDepth : Color.questCardDefaultDepth,
+    borderColor: Color.questCardOutline,
+  };
+  
+  const contentStyles = {
+    borderColor: isAlert ? Color.questCardAlertBackgroundOutline : Color.questCardDefaultBackgroundOutline,
+  };
+  
+  const boxStyles = {
+    backgroundColor: isAlert ? Color.questCardAlertBackground : Color.questCardDefaultBackground,
+  };
+  
+  const rewardInfoStyles = {
+    backgroundColor: isAlert ? Color.questCardAlertValueBox : Color.questCardDefaultValueBox,
+  };
+  
+  const titleStyles = {
+    color: isAlert ? Color.textQuestCardAlert : Color.textQuestCardDefault,
+  };
+
   return (
-    <View style={[styles.questcardM, styles.contentBorder]}>
-      <View style={[styles.content, styles.boxLayout]}>
-        <View style={[styles.box, styles.boxFlexBox]}>
-          <View style={[styles.rewardInfo, styles.infoFlexBox]}>
+    <View style={[styles.questcardM, styles.contentBorder, cardStyles]}>
+      <View style={[styles.content, styles.boxLayout, contentStyles]}>
+        <View style={[styles.box, styles.boxFlexBox, boxStyles]}>
+          <View style={[styles.rewardInfo, styles.infoFlexBox, rewardInfoStyles]}>
             <ValueIcon
               property1="coin"
               size="M"
@@ -42,8 +68,17 @@ const QuestCardM = ({
             />
           </View>
           <View style={[styles.cardInfo, styles.infoFlexBox]}>
-            <Text style={styles.questTitle}>Quest Title</Text>
-            <ProgressBar1 property1="blue" />
+            <View style={styles.titleContainer}>
+              {isAlert && (
+                <Image
+                  style={styles.countdownIcon}
+                  contentFit="cover"
+                  source={require("../assets/icon-time.svg")}
+                />
+              )}
+              <Text style={[styles.questTitle, titleStyles]}>Quest Title</Text>
+            </View>
+            <ProgressBar1 property1="blue" progressWidth={progressWidth} />
           </View>
         </View>
       </View>
@@ -107,13 +142,22 @@ const styles = StyleSheet.create({
     paddingVertical: Padding.padding_8,
     gap: Gap.gap_8,
   },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Gap.gap_4,
+  },
+  countdownIcon: {
+    width: 16,
+    height: 16,
+  },
   questTitle: {
     fontSize: FontSize.fs_12,
     fontWeight: "600",
     fontFamily: FontFamily.poppinsSemiBold,
     color: Color.textQuestCardDefault,
     textAlign: "left",
-    alignSelf: "stretch",
+    flex: 1,
   },
 });
 

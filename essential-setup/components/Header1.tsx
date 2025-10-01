@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import TagGenre from "./TagGenre";
 import Rating from "./Rating";
 import {
@@ -15,6 +16,12 @@ import {
 } from "../GlobalStyles";
 
 const Header1 = () => {
+  const navigation = useNavigation();
+
+  const handleBackPress = () => {
+    navigation.navigate("Button1" as never);
+  };
+
   return (
     <View style={styles.header}>
       <View style={styles.headerContents}>
@@ -35,11 +42,13 @@ const Header1 = () => {
             </View>
           </View>
         </View>
-        <Image
-          style={styles.btnBackIcon}
-          contentFit="cover"
-          source={require("../assets/btn-back.png")}
-        />
+        <TouchableOpacity onPress={handleBackPress}>
+          <Image
+            style={styles.btnBackIcon}
+            contentFit="cover"
+            source={require("../assets/btn-back.png")}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -56,6 +65,9 @@ const styles = StyleSheet.create({
     zIndex: 3,
     justifyContent: "center",
     flexDirection: "row",
+    position: "absolute",
+    top: 0,
+    left: 0,
   },
   headerContents: {
     flex: 1,

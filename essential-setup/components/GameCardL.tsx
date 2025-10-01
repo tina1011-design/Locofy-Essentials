@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Text, View, ImageBackground } from "react-native";
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import ValueIcon from "./ValueIcon";
 import Button1 from "./Button1";
 import {
@@ -29,8 +30,14 @@ const GameCardL = ({
   valueIconSize1 = "M",
   valueIconShowIconCash1,
 }: GameCardLType) => {
+  const navigation = useNavigation();
+
+  const handlePress = () => {
+    navigation.navigate("BarEarupto" as never);
+  };
+
   return (
-    <View style={styles.gamecardL}>
+    <TouchableOpacity style={styles.gamecardL} onPress={handlePress}>
       <ImageBackground
         style={styles.contentIcon}
         resizeMode="cover"
@@ -67,7 +74,7 @@ const GameCardL = ({
           <Button1 property1="Install" />
         </View>
       </ImageBackground>
-    </View>
+    </TouchableOpacity>
   );
 };
 

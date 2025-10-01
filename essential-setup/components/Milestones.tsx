@@ -8,8 +8,10 @@ const Milestones = () => {
   return (
     <View style={styles.milestones}>
       <TitleQuest />
-      <View style={styles.mquest}>
-        <QuestCardM property1="blue" showProgressBar showIconCash />
+      <View style={styles.questCardsContainer}>
+        <QuestCardM property1="blue" showProgressBar showIconCash progressWidth={25} />
+        <QuestCardM property1="alert" showProgressBar showIconCash progressWidth={75} />
+        <QuestCardM property1="blue" showProgressBar showIconCash progressWidth={50} />
       </View>
     </View>
   );
@@ -21,8 +23,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: Gap.gap_5,
   },
-  mquest: {
+  questCardsContainer: {
     width: 361,
+    gap: 12,
+    alignItems: "center",
   },
 });
 

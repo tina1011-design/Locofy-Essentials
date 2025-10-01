@@ -41,6 +41,10 @@ export const Color = {
   questCardDefaultBackgroundOutline: "#fff",
   questCardDefaultDepth: "#9aa5f5",
   questCardDefaultValueBox: "#769bfa",
+  questCardAlertBackground: "#fff",
+  questCardAlertBackgroundOutline: "#EF5C75",
+  questCardAlertDepth: "#C33232",
+  questCardAlertValueBox: "#FF8297",
   questCardOutline: "#1018b3",
   tagAction: "#fb872d",
   tagSimulation: "#04c274",
@@ -48,6 +52,7 @@ export const Color = {
   textGameCardTitle: "#5b138e",
   textOutline: "#131363",
   textQuestCardDefault: "#6360e7",
+  textQuestCardAlert: "#C33232",
   textWhite: "#fff",
 };
 /* Gaps */

@@ -9,7 +9,17 @@ const Scroll = () => {
     <View style={styles.scroll}>
       <View style={styles.topPicks}>
         <Title text="Top Picks for you" />
-        <View>
+        <View style={styles.gameCardsContainer}>
+          <GameCardL
+            property1="Install"
+            valueIconSize1="M"
+            valueIconShowIconCash1
+          />
+          <GameCardL
+            property1="Install"
+            valueIconSize1="M"
+            valueIconShowIconCash1
+          />
           <GameCardL
             property1="Install"
             valueIconSize1="M"
@@ -28,6 +38,10 @@ const styles = StyleSheet.create({
   },
   topPicks: {
     alignSelf: "stretch",
+    alignItems: "center",
+  },
+  gameCardsContainer: {
+    gap: 16,
     alignItems: "center",
   },
 });

@@ -10,14 +10,14 @@ export type ValueIconType = {
 
   /** Variant props */
   property1?: "coin" | "cash" | "cashback";
-  size?: "M" | "L";
+  size?: "S" | "M" | "L";
 };
 
 const getValueIconContainerStyle = (styleKey: string) => {
   switch (styleKey) {
     case "cash-L":
       return {
-        justifyContent: null,
+        justifyContent: undefined,
       };
   }
 };

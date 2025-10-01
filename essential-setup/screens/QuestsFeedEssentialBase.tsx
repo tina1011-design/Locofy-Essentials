@@ -11,15 +11,16 @@ import { Gap, Color, Width, Border, Height, Padding } from "../GlobalStyles";
 
 const QuestsFeedEssentialBase = () => {
   const [dropdownMoreinfoOpen, setDropdownMoreinfoOpen] = useState(false);
-  const [dropdownMoreinfoValue, setDropdownMoreinfoValue] = useState();
+  const [dropdownMoreinfoValue, setDropdownMoreinfoValue] = useState<string | null>(null);
 
   return (
-    <ScrollView
-      style={[styles.questsfeedEssentialBase, styles.bannerIconLayout]}
-      contentContainerStyle={styles.questsFeedEssentialBaseScrollViewContent}
-    >
+    <View style={styles.container}>
       <Header1 />
-      <View style={styles.scrollWrapper}>
+      <ScrollView
+        style={[styles.questsfeedEssentialBase, styles.bannerIconLayout]}
+        contentContainerStyle={styles.questsFeedEssentialBaseScrollViewContent}
+      >
+        <View style={styles.scrollWrapper}>
         <View style={[styles.scroll, styles.infoFlexBox]}>
           <Image
             style={[styles.bannerIcon, styles.bannerIconLayout]}
@@ -42,7 +43,7 @@ const QuestsFeedEssentialBase = () => {
                 items={[]}
                 labelStyle={styles.dropdownMoreinfoValue}
                 placeholderStyle={styles.dropdownMoreinfoValue}
-                dropdownContainerStyle={styles.dropdownMoreinfodropDownContent}
+                dropDownContainerStyle={styles.dropdownMoreinfodropDownContent}
                 zIndex={2000}
                 zIndexInverse={0}
                 dropDownDirection={"BOTTOM"}
@@ -53,14 +54,19 @@ const QuestsFeedEssentialBase = () => {
           <DialogTip />
         </View>
       </View>
-      <View style={styles.btnPlaynearnWrapper}>
-        <BtnPlayNEarn />
-      </View>
-    </ScrollView>
+        <View style={styles.btnPlaynearnWrapper}>
+          <BtnPlayNEarn />
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Color.layoutPageBackground,
+  },
   dropdownMoreinfoValue: {
     color: "#fff",
     fontSize: 12,
@@ -100,6 +106,7 @@ const styles = StyleSheet.create({
   questsfeedEssentialBase: {
     backgroundColor: Color.layoutPageBackground,
     flex: 1,
+    paddingTop: 160, // Height of Header1 to prevent overlap
   },
   scrollWrapper: {
     height: 499,
