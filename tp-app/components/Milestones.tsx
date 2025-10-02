@@ -11,6 +11,7 @@ const Milestones = () => {
       <TitleQuest />
       <View style={styles.questCardsContainer}>
         <QuestCardLExtended property1="Default" valueIconSize1="M" valueIconShowIconCash1 />
+        <QuestCardLExtended property1="alert" valueIconSize1="M" valueIconShowIconCash1 />
         <QuestCardM property1="blue" showProgressBar showIconCash progressWidth={25} />
         <QuestCardM property1="alert" showProgressBar showIconCash progressWidth={75} />
         <QuestCardM property1="blue" showProgressBar showIconCash progressWidth={50} />

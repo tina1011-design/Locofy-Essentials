@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Pressable, Text, StyleSheet, View } from "react-native";
+import { Pressable, Text, StyleSheet, View, ImageBackground } from "react-native";
 import { Image } from "expo-image";
 import {
   Color,
@@ -13,17 +13,23 @@ import {
 const BtnPlayNEarn = () => {
   return (
     <Pressable style={styles.btnPlaynearn}>
-      <Text
-        style={[styles.playEarn, styles.playEarnClr]}
-      >{`PLAY & EARN  `}</Text>
-      <View style={styles.currencyIcon}>
-        <Image
-          style={styles.iconCash}
-          contentFit="cover"
-          source={require("../assets/icon-cash1.png")}
-        />
-        <Text style={[styles.currencyValue, styles.playEarnClr]}>202</Text>
-      </View>
+      <ImageBackground
+        style={styles.backgroundImage}
+        resizeMode="cover"
+        source={require("../assets/btn_PlayNEarn_bg.png")}
+      >
+        <Text
+          style={[styles.playEarn, styles.playEarnClr]}
+        >{`PLAY & EARN  `}</Text>
+        <View style={styles.currencyIcon}>
+          <Image
+            style={styles.iconCash}
+            contentFit="cover"
+            source={require("../assets/icon-cash1.png")}
+          />
+          <Text style={[styles.currencyValue, styles.playEarnClr]}>202</Text>
+        </View>
+      </ImageBackground>
     </Pressable>
   );
 };
@@ -38,10 +44,15 @@ const styles = StyleSheet.create({
     width: 295,
     height: 88,
     overflow: "hidden",
+  },
+  backgroundImage: {
+    width: 295,
+    height: 88,
     paddingHorizontal: 42,
     paddingTop: Padding.padding_14,
     paddingBottom: Padding.padding_24,
     alignItems: "center",
+    justifyContent: "center",
   },
   playEarn: {
     alignSelf: "stretch",

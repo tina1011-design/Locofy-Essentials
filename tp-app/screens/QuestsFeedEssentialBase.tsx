@@ -54,10 +54,10 @@ const QuestsFeedEssentialBase = () => {
           <DialogTip />
         </View>
       </View>
-        <View style={styles.btnPlaynearnWrapper}>
-          <BtnPlayNEarn />
-        </View>
       </ScrollView>
+      <View style={styles.btnPlaynearnWrapper}>
+        <BtnPlayNEarn />
+      </View>
     </View>
   );
 };
@@ -146,11 +146,15 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   btnPlaynearnWrapper: {
-    width: 344,
+    position: "absolute",
+    bottom: 40,
+    left: 0,
+    right: 0,
     height: 88,
-    justifyContent: "flex-end",
-    paddingRight: 48,
+    justifyContent: "center",
+    alignItems: "center",
     flexDirection: "row",
+    zIndex: 1000,
   },
 });
 

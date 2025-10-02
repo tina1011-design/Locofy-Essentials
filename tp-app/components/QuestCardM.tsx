@@ -1,6 +1,7 @@
 import * as React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Image } from "expo-image";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ValueIcon from "./ValueIcon";
 import ProgressBar1 from "./ProgressBar1";
 import {
@@ -70,13 +71,15 @@ const QuestCardM = ({
           <View style={[styles.cardInfo, styles.infoFlexBox]}>
             <View style={styles.titleContainer}>
               {isAlert && (
-                <Image
-                  style={styles.countdownIcon}
-                  contentFit="cover"
-                  source={require("../assets/icon-time.svg")}
-                />
+                <MaterialCommunityIcons name="clock-time-five-outline" size={16} color="#C33232" />
               )}
               <Text style={[styles.questTitle, titleStyles]}>Quest Title</Text>
+              {isAlert && (
+                <View style={styles.timeContainer}>
+                  <MaterialCommunityIcons name="timer-sand-complete" size={16} color="#C33232" />
+                  <Text style={styles.timeValue}>00:15</Text>
+                </View>
+              )}
             </View>
             <ProgressBar1 property1="blue" progressWidth={progressWidth} />
           </View>
@@ -147,9 +150,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: Gap.gap_4,
   },
-  countdownIcon: {
-    width: 16,
-    height: 16,
+  timeContainer: {
+    marginLeft: "auto",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  timeValue: {
+    fontSize: FontSize.fs_12,
+    fontWeight: "600",
+    fontFamily: FontFamily.poppinsSemiBold,
+    color: "#C33232",
+    textAlign: "right",
   },
   questTitle: {
     fontSize: FontSize.fs_12,

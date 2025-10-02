@@ -53,6 +53,7 @@ export const Color = {
   textOutline: "#131363",
   textQuestCardDefault: "#6360e7",
   textQuestCardAlert: "#C33232",
+  textQuestCardCashback: "#FF8700",
   textWhite: "#fff",
 };
 /* Gaps */
