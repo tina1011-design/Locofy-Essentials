@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Image } from "expo-image";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DropDownPicker from "react-native-dropdown-picker";
 import Header1 from "../components/Header1";
 import BarEarupto1 from "../components/BarEarupto1";
@@ -47,6 +48,12 @@ const QuestsFeedEssentialBase = () => {
                 zIndex={2000}
                 zIndexInverse={0}
                 dropDownDirection={"BOTTOM"}
+                ArrowUpIconComponent={() => (
+                  <MaterialCommunityIcons name="triangle" size={12} color="#fff" />
+                )}
+                ArrowDownIconComponent={() => (
+                  <MaterialCommunityIcons name="triangle" size={12} color="#fff" style={{ transform: [{ rotate: '180deg' }] }} />
+                )}
               />
             </View>
           </View>
@@ -74,7 +81,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Bold",
   },
   dropdownMoreinfodropDownContainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
     paddingVertical: 8,
     minHeight: 40,
     height: 40,
@@ -112,11 +119,11 @@ const styles = StyleSheet.create({
     height: 499,
     paddingBottom: 21,
     flexDirection: "row",
-    width: Width.width_393,
+    width: "100%",
   },
   scroll: {
     height: 478,
-    width: Width.width_393,
+    width: "100%",
   },
   bannerIcon: {
     alignSelf: "stretch",
@@ -129,7 +136,7 @@ const styles = StyleSheet.create({
   },
   dropdownMoreinfo: {
     zIndex: 2000,
-    width: 109,
+    width: 120,
     borderRadius: Border.br_16,
     height: Height.height_40,
     alignItems: "center",

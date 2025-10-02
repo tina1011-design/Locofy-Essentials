@@ -56,7 +56,7 @@ const Header1 = () => {
 
 const styles = StyleSheet.create({
   header: {
-    width: Width.width_393,
+    width: "100%",
     backgroundColor: Color.layoutHeaderBackground,
     height: 160,
     alignItems: "flex-end",

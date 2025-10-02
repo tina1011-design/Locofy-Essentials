@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { Image } from "expo-image";
 import { StyleSheet, Text, View } from "react-native";
+import SvgTextWithStroke from "./SvgTextWithStroke";
 import { Width, Height, FontSize, FontFamily, Color } from "../GlobalStyles";
 
 export type ValueIconType = {
@@ -82,9 +83,16 @@ const ValueIcon = ({
           }
         />
       )}
-      <Text style={[styles.separatorOne, getText5Style(variantKey)]}>
-        {value}
-      </Text>
+      <SvgTextWithStroke
+        text={value}
+        fontSize={FontSize.fs_16}
+        fontFamily={FontFamily.luckiestGuyRegular}
+        fill={Color.textWhite}
+        stroke="#000000"
+        strokeWidth={2}
+        width={Width.width_41}
+        height={Height.height_20}
+      />
     </View>
   );
 };
@@ -97,17 +105,6 @@ const styles = StyleSheet.create({
   },
   iconCoin: {
     width: Width.width_20,
-    height: Height.height_20,
-  },
-  separatorOne: {
-    width: Width.width_41,
-    fontSize: FontSize.fs_16,
-    fontFamily: FontFamily.luckiestGuyRegular,
-    color: Color.textWhite,
-    textAlign: "left",
-    display: "flex",
-    alignItems: "flex-end",
-    marginLeft: -4,
     height: Height.height_20,
   },
 });
