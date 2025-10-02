@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Pressable, Text, StyleSheet, View, ImageBackground } from "react-native";
 import { Image } from "expo-image";
+import SvgTextWithStroke from "./SvgTextWithStroke";
 import {
   Color,
   FontSize,
@@ -8,6 +9,7 @@ import {
   LineHeight,
   FontFamily,
   Height,
+  Width,
 } from "../GlobalStyles";
 
 const BtnPlayNEarn = () => {
@@ -18,16 +20,34 @@ const BtnPlayNEarn = () => {
         resizeMode="cover"
         source={require("../assets/btn_PlayNEarn_bg.png")}
       >
-        <Text
-          style={[styles.playEarn, styles.playEarnClr]}
-        >{`PLAY & EARN  `}</Text>
+        <SvgTextWithStroke
+          text="PLAY & EARN"
+          fontSize={FontSize.fs_24}
+          fontFamily={FontFamily.poppinsBold}
+          fill={Color.textWhite}
+          stroke="#000000"
+          strokeWidth={2}
+          width={200}
+          height={30}
+          textAnchor="middle"
+        />
         <View style={styles.currencyIcon}>
           <Image
             style={styles.iconCash}
             contentFit="cover"
             source={require("../assets/icon-cash1.png")}
           />
-          <Text style={[styles.currencyValue, styles.playEarnClr]}>202</Text>
+          <SvgTextWithStroke
+            text="2400"
+            fontSize={FontSize.fs_24}
+            fontFamily={FontFamily.luckiestGuyRegular}
+            fill={Color.textWhite}
+            stroke="#000000"
+            strokeWidth={2}
+            width={70}
+            height={Height.height_34}
+            y={5}
+          />
         </View>
       </ImageBackground>
     </Pressable>
@@ -49,35 +69,18 @@ const styles = StyleSheet.create({
     width: 295,
     height: 88,
     paddingHorizontal: 42,
-    paddingTop: Padding.padding_14,
-    paddingBottom: Padding.padding_24,
+    paddingLeft: 50,
     alignItems: "center",
     justifyContent: "center",
-  },
-  playEarn: {
-    alignSelf: "stretch",
-    lineHeight: LineHeight.lh_24,
-    fontWeight: "700",
-    fontFamily: FontFamily.poppinsBold,
-    textAlign: "center",
-    justifyContent: "center",
-    alignItems: "center",
   },
   currencyIcon: {
     flexDirection: "row",
     marginTop: -2,
     alignItems: "center",
+    justifyContent: "center",
   },
   iconCash: {
     width: 34,
-    height: Height.height_34,
-  },
-  currencyValue: {
-    width: 54,
-    fontFamily: FontFamily.luckiestGuyRegular,
-    textAlign: "left",
-    alignItems: "flex-end",
-    marginLeft: -4,
     height: Height.height_34,
   },
 });

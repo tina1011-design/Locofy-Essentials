@@ -12,6 +12,7 @@ interface SvgTextWithStrokeProps {
   y?: number;
   width?: number;
   height?: number;
+  textAnchor?: string;
 }
 
 const SvgTextWithStroke: React.FC<SvgTextWithStrokeProps> = ({
@@ -25,34 +26,36 @@ const SvgTextWithStroke: React.FC<SvgTextWithStrokeProps> = ({
   y = 0,
   width = 41,
   height = 20,
+  textAnchor = "start",
 }) => {
   const textY = y + fontSize * 0.8; // Adjust y position for proper text baseline
+  const textX = textAnchor === "middle" ? width / 2 : x;
   
   return (
     <Svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
       {/* Background stroke text */}
       <Text
-        x={x}
+        x={textX}
         y={textY}
         fontSize={fontSize}
         fontFamily={fontFamily}
         fill="none"
         stroke={stroke}
         strokeWidth={strokeWidth * 2}
-        textAnchor="start"
+        textAnchor={textAnchor}
         dominantBaseline="hanging"
       >
         {text}
       </Text>
       {/* Main text on top */}
       <Text
-        x={x}
+        x={textX}
         y={textY}
         fontSize={fontSize}
         fontFamily={fontFamily}
         fill={fill}
         stroke="none"
-        textAnchor="start"
+        textAnchor={textAnchor}
         dominantBaseline="hanging"
       >
         {text}

@@ -20,13 +20,53 @@ const getValueIconContainerStyle = (styleKey: string) => {
   switch (styleKey) {
     case "cash-L":
       return {
-        justifyContent: null,
+        justifyContent: "center" as const,
       };
   }
 };
 const getIconCoinStyle = (styleKey: string) => {
   switch (styleKey) {
     case "cash-L":
+      return {
+        width: Width.width_28,
+        height: Height.height_28,
+      };
+    case "cashback-S":
+      return {
+        width: Width.width_16,
+        height: Height.height_16,
+      };
+    case "cashback-M":
+      return {
+        width: Width.width_20,
+        height: Height.height_20,
+      };
+    case "cashback-L":
+      return {
+        width: Width.width_28,
+        height: Height.height_28,
+      };
+    case "cash-S":
+      return {
+        width: Width.width_16,
+        height: Height.height_16,
+      };
+    case "cash-M":
+      return {
+        width: Width.width_20,
+        height: Height.height_20,
+      };
+    case "coin-S":
+      return {
+        width: Width.width_16,
+        height: Height.height_16,
+      };
+    case "coin-M":
+      return {
+        width: Width.width_20,
+        height: Height.height_20,
+      };
+    case "coin-L":
       return {
         width: Width.width_28,
         height: Height.height_28,
@@ -85,13 +125,14 @@ const ValueIcon = ({
       )}
       <SvgTextWithStroke
         text={value}
-        fontSize={FontSize.fs_16}
+        fontSize={size === "S" ? FontSize.fs_12 : size === "M" ? FontSize.fs_16 : FontSize.fs_24}
         fontFamily={FontFamily.luckiestGuyRegular}
         fill={Color.textWhite}
         stroke="#000000"
         strokeWidth={2}
-        width={Width.width_41}
-        height={Height.height_20}
+        width={size === "S" ? 30 : size === "M" ? Width.width_41 : 59}
+        height={size === "S" ? Height.height_16 : size === "M" ? Height.height_20 : Height.height_28}
+        y={size === "S" ? 2 : size === "M" ? 3 : 4}
       />
     </View>
   );

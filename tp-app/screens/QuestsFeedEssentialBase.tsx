@@ -97,10 +97,9 @@ const styles = StyleSheet.create({
   },
   questsFeedEssentialBaseScrollViewContent: {
     flexDirection: "column",
-    paddingBottom: 105,
+    paddingBottom: 705,
     alignItems: "flex-end",
     justifyContent: "flex-start",
-    height: 852,
   },
   bannerIconLayout: {
     maxWidth: "100%",

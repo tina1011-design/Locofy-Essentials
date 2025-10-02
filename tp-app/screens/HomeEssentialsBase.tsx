@@ -26,11 +26,11 @@ const styles = StyleSheet.create({
   homeEssentialsBaseScrollViewContent: {
     flexDirection: "column",
     paddingTop: 36,
-    paddingBottom: 432,
+    paddingBottom: 40,
     alignItems: "flex-start",
     justifyContent: "flex-start",
     gap: 40,
-    height: 852,
+    width: "100%",
   },
   homeEssentialsBase: {
     width: "100%",
