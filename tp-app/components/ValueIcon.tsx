@@ -10,36 +10,9 @@ export type ValueIconType = {
 
   /** Variant props */
   property1?: "coin" | "cash" | "cashback";
-  size?: "S" | "M" | "L";
+  size?: string;
 };
 
-const getValueIconContainerStyle = (styleKey: string) => {
-  switch (styleKey) {
-    case "cash-L":
-      return {
-        justifyContent: undefined,
-      };
-  }
-};
-const getIconCoinStyle = (styleKey: string) => {
-  switch (styleKey) {
-    case "cash-L":
-      return {
-        width: Width.width_28,
-        height: Height.height_28,
-      };
-  }
-};
-const getText2Style = (styleKey: string) => {
-  switch (styleKey) {
-    case "cash-L":
-      return {
-        height: Height.height_28,
-        width: 59,
-        fontSize: FontSize.fs_24,
-      };
-  }
-};
 const ValueIcon = ({
   property1 = "cash",
   size = "S",
@@ -47,20 +20,12 @@ const ValueIcon = ({
   showIconCash = true,
   iconCoin,
 }: ValueIconType) => {
-  const variantKey = [property1, size].join("-");
-
   return (
-    <View style={[styles.root, getValueIconContainerStyle(variantKey)]}>
+    <View style={styles.root}>
       {!!showIconCash && (
-        <Image
-          style={[styles.iconCoin, getIconCoinStyle(variantKey)]}
-          contentFit="cover"
-          source={iconCoin}
-        />
+        <Image style={styles.iconCoin} contentFit="cover" source={iconCoin} />
       )}
-      <Text style={[styles.separatorOne, getText2Style(variantKey)]}>
-        {value}
-      </Text>
+      <Text style={styles.separatorOne}>{value}</Text>
     </View>
   );
 };
