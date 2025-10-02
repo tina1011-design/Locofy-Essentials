@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
   topPicks: {
     alignSelf: "stretch",
     alignItems: "center",
+    paddingTop: 120,
   },
   gameCardsContainer: {
     gap: 16,

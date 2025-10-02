@@ -1,22 +1,28 @@
 import * as React from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import Header from "../components/Header";
 import Scroll from "../components/Scroll1";
 import { Color } from "../GlobalStyles";
 
 const HomeEssentialsBase = () => {
   return (
-    <ScrollView
-      style={styles.homeEssentialsBase}
-      contentContainerStyle={styles.homeEssentialsBaseScrollViewContent}
-    >
+    <View style={styles.container}>
       <Header />
-      <Scroll />
-    </ScrollView>
+      <ScrollView
+        style={styles.homeEssentialsBase}
+        contentContainerStyle={styles.homeEssentialsBaseScrollViewContent}
+      >
+        <Scroll />
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Color.layoutPageBackground,
+  },
   homeEssentialsBaseScrollViewContent: {
     flexDirection: "column",
     paddingTop: 36,

@@ -30,6 +30,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 35,
     zIndex: 2,
+    position: "absolute",
+    top: 80,
+    left: 0,
   },
   headerAvatarFrameIcon: {
     width: 44,
