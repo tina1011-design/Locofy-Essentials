@@ -1,12 +1,11 @@
 import React, { useMemo } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Text, View, ImageSourcePropType } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Width, Height, FontSize, FontFamily, Color } from "../GlobalStyles";
 
 export type ValueIconType = {
   value?: string;
   showIconCash?: boolean;
-  iconCoin?: ImageSourcePropType;
 
   /** Variant props */
   property1?: "coin" | "cash" | "cashback";
@@ -52,7 +51,6 @@ const ValueIcon = ({
   size = "S",
   value = "2400",
   showIconCash = true,
-  iconCoin,
   valueIconMarginTop,
 }: ValueIconType) => {
   const variantKey = [property1, size].join("-");
@@ -75,7 +73,7 @@ const ValueIcon = ({
         <Image
           style={[styles.iconCoin, getIconCoinStyle(variantKey)]}
           contentFit="cover"
-          source={iconCoin}
+          source={require("../assets/icon-coin.png")}
         />
       )}
       <Text style={[styles.separatorOne, getText5Style(variantKey)]}>
