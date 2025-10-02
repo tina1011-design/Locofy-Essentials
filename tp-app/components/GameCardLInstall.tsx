@@ -3,7 +3,6 @@ import { Image } from "expo-image";
 import { StyleSheet, Text, View, ImageBackground, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import ValueIcon from "./ValueIcon";
-import Button1 from "./Button1";
 import {
   Padding,
   Color,
@@ -57,7 +56,6 @@ const GameCardLInstall = ({
                 size="M"
                 value="2400"
                 showIconCash
-                iconCoin={require("../assets/icon-cash.png")}
               />
             </View>
             <View style={[styles.valueBox2, styles.valueSpaceBlock]}>
@@ -67,11 +65,14 @@ const GameCardLInstall = ({
                 size={valueIconSize1}
                 value="2400"
                 showIconCash={valueIconShowIconCash1}
-                iconCoin={require("../assets/icon-cashback.png")}
               />
             </View>
           </View>
-          <Button1 property1="Install" />
+          <Image
+            style={styles.buttonInstallImage}
+            contentFit="cover"
+            source={require("../assets/Button-Install.png")}
+          />
         </View>
       </ImageBackground>
     </TouchableOpacity>
@@ -145,6 +146,10 @@ const styles = StyleSheet.create({
     borderTopRightRadius: Border.br_8,
     borderBottomRightRadius: Border.br_8,
     height: Height.height_40,
+  },
+  buttonInstallImage: {
+    width: 61,
+    height: 33,
   },
 });
 

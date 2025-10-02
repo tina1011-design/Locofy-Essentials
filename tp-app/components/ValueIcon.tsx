@@ -73,7 +73,13 @@ const ValueIcon = ({
         <Image
           style={[styles.iconCoin, getIconCoinStyle(variantKey)]}
           contentFit="cover"
-          source={require("../assets/icon-coin.png")}
+          source={
+            property1 === "cash" 
+              ? require("../assets/icon-cash.png")
+              : property1 === "cashback"
+              ? require("../assets/icon-cashback.png")
+              : require("../assets/icon-coin.png")
+          }
         />
       )}
       <Text style={[styles.separatorOne, getText5Style(variantKey)]}>
