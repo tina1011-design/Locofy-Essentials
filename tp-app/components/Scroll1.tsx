@@ -1,7 +1,7 @@
 import * as React from "react";
 import { StyleSheet, View } from "react-native";
 import Title from "./Title";
-import GameCardL from "./GameCardL";
+import GameCardLInstall from "./GameCardLInstall";
 import { Width } from "../GlobalStyles";
 
 const Scroll = () => {
@@ -10,17 +10,17 @@ const Scroll = () => {
       <View style={styles.topPicks}>
         <Title text="Top Picks for you" />
         <View style={styles.gameCardsContainer}>
-          <GameCardL
+          <GameCardLInstall
             property1="Install"
             valueIconSize1="M"
             valueIconShowIconCash1
           />
-          <GameCardL
+          <GameCardLInstall
             property1="Install"
             valueIconSize1="M"
             valueIconShowIconCash1
           />
-          <GameCardL
+          <GameCardLInstall
             property1="Install"
             valueIconSize1="M"
             valueIconShowIconCash1

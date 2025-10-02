@@ -2,6 +2,7 @@ import * as React from "react";
 import { StyleSheet, View } from "react-native";
 import TitleQuest from "./TitleQuest";
 import QuestCardM from "./QuestCardM";
+import QuestCardLExtended from "./QuestCardLExtended";
 import { Gap } from "../GlobalStyles";
 
 const Milestones = () => {
@@ -9,6 +10,7 @@ const Milestones = () => {
     <View style={styles.milestones}>
       <TitleQuest />
       <View style={styles.questCardsContainer}>
+        <QuestCardLExtended property1="Default" valueIconSize1="M" valueIconShowIconCash1 />
         <QuestCardM property1="blue" showProgressBar showIconCash progressWidth={25} />
         <QuestCardM property1="alert" showProgressBar showIconCash progressWidth={75} />
         <QuestCardM property1="blue" showProgressBar showIconCash progressWidth={50} />

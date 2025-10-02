@@ -17,7 +17,7 @@ import {
   Height,
 } from "../GlobalStyles";
 
-export type GameCardLType = {
+export type GameCardLInstallType = {
   valueIconSize1?: "M" | "L";
   valueIconShowIconCash1?: boolean;
 
@@ -25,11 +25,11 @@ export type GameCardLType = {
   property1?: string;
 };
 
-const GameCardL = ({
+const GameCardLInstall = ({
   property1 = "Install",
   valueIconSize1 = "M",
   valueIconShowIconCash1,
-}: GameCardLType) => {
+}: GameCardLInstallType) => {
   const navigation = useNavigation();
 
   const handlePress = () => {
@@ -148,4 +148,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GameCardL;
+export default GameCardLInstall;
