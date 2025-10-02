@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useMemo } from "react";
 import { Image } from "expo-image";
 import { StyleSheet, Text, View, ImageSourcePropType } from "react-native";
 import { Width, Height, FontSize, FontFamily, Color } from "../GlobalStyles";
@@ -11,21 +11,76 @@ export type ValueIconType = {
   /** Variant props */
   property1?: "coin" | "cash" | "cashback";
   size?: string;
+
+  /** Style props */
+  valueIconMarginTop?: number | string;
 };
 
+const getValueIconContainerStyle = (styleKey: string) => {
+  switch (styleKey) {
+    case "cash-L":
+      return {
+        justifyContent: null,
+      };
+  }
+};
+const getIconCoinStyle = (styleKey: string) => {
+  switch (styleKey) {
+    case "cash-L":
+      return {
+        width: Width.width_28,
+        height: Height.height_28,
+      };
+  }
+};
+const getText5Style = (styleKey: string) => {
+  switch (styleKey) {
+    case "cash-L":
+      return {
+        height: Height.height_28,
+        width: 59,
+        fontSize: FontSize.fs_24,
+      };
+  }
+};
+const getStyleValue = (key: string, value: string | number | undefined) => {
+  if (value === undefined) return;
+  return { [key]: value === "unset" ? undefined : value };
+};
 const ValueIcon = ({
   property1 = "cash",
   size = "S",
   value = "2400",
   showIconCash = true,
   iconCoin,
+  valueIconMarginTop,
 }: ValueIconType) => {
+  const variantKey = [property1, size].join("-");
+
+  const valueIconStyle = useMemo(() => {
+    return {
+      ...getStyleValue("marginTop", valueIconMarginTop),
+    };
+  }, [valueIconMarginTop]);
+
   return (
-    <View style={styles.root}>
+    <View
+      style={[
+        styles.root,
+        getValueIconContainerStyle(variantKey),
+        valueIconStyle,
+      ]}
+    >
       {!!showIconCash && (
-        <Image style={styles.iconCoin} contentFit="cover" source={iconCoin} />
+        <Image
+          style={[styles.iconCoin, getIconCoinStyle(variantKey)]}
+          contentFit="cover"
+          source={iconCoin}
+        />
       )}
-      <Text style={styles.separatorOne}>{value}</Text>
+      <Text style={[styles.separatorOne, getText5Style(variantKey)]}>
+        {value}
+      </Text>
     </View>
   );
 };
