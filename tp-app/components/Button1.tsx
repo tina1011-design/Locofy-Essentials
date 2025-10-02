@@ -1,48 +1,87 @@
 import * as React from "react";
-import { Pressable, StyleSheet, View, Text } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  View,
+  Text,
+  ImageSourcePropType,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Image } from "expo-image";
-import HighlightLeft1 from "../assets/Highlight-Left-1.svg";
-import HighlightRight1 from "../assets/Highlight-Right-1.svg";
 import {
+  Color,
+  Width,
   Border,
   BoxShadow,
-  Color,
   Height,
   FontSize,
   FontFamily,
 } from "../GlobalStyles";
 
 export type Button1Type = {
+  highlightLeft1?: React.ReactNode;
+  highlightRight1?: React.ReactNode;
+  highlightLeft2?: ImageSourcePropType;
+  install?: string;
+
   /** Variant props */
-  property1?: string;
+  property1?: "Install" | "Play";
 };
 
-const Button1 = ({ property1 = "Install" }: Button1Type) => {
+const getButton1Style = (styleKey: string) => {
+  switch (styleKey) {
+    case "Play":
+      return {
+        backgroundColor: Color.buttonPlayDepth,
+      };
+  }
+};
+const getBaseStyle = (styleKey: string) => {
+  switch (styleKey) {
+    case "Play":
+      return {
+        backgroundColor: Color.buttonPlayBackground,
+      };
+  }
+};
+const getInstallTextStyle = (styleKey: string) => {
+  switch (styleKey) {
+    case "Play":
+      return {
+        marginLeft: -14.6,
+        width: Width.width_30,
+      };
+  }
+};
+const Button1 = ({
+  property1 = "Install",
+  highlightLeft1,
+  highlightRight1,
+  highlightLeft2,
+  install,
+}: Button1Type) => {
+  const variantKey = `${property1}`;
+
   return (
-    <Pressable style={styles.button}>
-      <View style={[styles.base, styles.basePosition]} />
+    <Pressable style={[styles.root, getButton1Style(variantKey)]}>
+      <View
+        style={[styles.base, styles.basePosition, getBaseStyle(variantKey)]}
+      />
       <LinearGradient
         style={[styles.surface, styles.basePosition]}
         locations={[0, 1]}
         colors={["#0da7fa", "#0c82dc"]}
       />
-      <HighlightLeft1
-        style={styles.highlightLeft1Icon}
-        width={55}
-        height={25}
-      />
-      <HighlightRight1
-        style={styles.highlightRight1Icon}
-        width={38}
-        height={NaN}
-      />
+      {highlightLeft1}
+      {highlightRight1}
       <Image
         style={styles.highlightLeft2Icon}
         contentFit="cover"
-        source={require("../assets/Highlight-Left-2.png")}
+        source={highlightLeft2}
       />
-      <Text style={styles.install}>Install</Text>
+      <Text style={[styles.install, getInstallTextStyle(variantKey)]}>
+        {install}
+      </Text>
     </Pressable>
   );
 };
@@ -53,15 +92,15 @@ const styles = StyleSheet.create({
     position: "absolute",
     borderRadius: Border.br_6,
   },
-  button: {
-    width: 61,
+  root: {
+    width: Width.width_61_2,
     boxShadow: BoxShadow.buttonShadow,
     elevation: 1,
     backgroundColor: Color.buttonInstallDepth,
     borderStyle: "solid",
     borderColor: Color.buttonInstallOutline,
     borderWidth: 0.6,
-    height: 33,
+    height: Height.height_33_2,
     overflow: "hidden",
     borderRadius: Border.br_6,
   },
@@ -79,17 +118,9 @@ const styles = StyleSheet.create({
     height: Height.height_26,
     backgroundColor: "transparent",
   },
-  highlightLeft1Icon: {
-    width: 55,
-    height: 25,
-  },
-  highlightRight1Icon: {
-    width: 38,
-    height: Height.height_11,
-  },
   highlightLeft2Icon: {
-    width: 52,
-    height: 7,
+    width: Width.width_51_55,
+    height: Height.height_7_2,
   },
   install: {
     marginLeft: -20.6,
