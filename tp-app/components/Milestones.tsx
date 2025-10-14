@@ -1,6 +1,6 @@
 import * as React from "react";
 import { StyleSheet, View } from "react-native";
-import TitleQuest from "./TitleQuest";
+import TitleWithIcon from "./TitleWithIcon";
 import QuestCardM from "./QuestCardM";
 import QuestCardLExtended from "./QuestCardLExtended";
 import { Gap } from "../GlobalStyles";
@@ -8,7 +8,11 @@ import { Gap } from "../GlobalStyles";
 const Milestones = () => {
   return (
     <View style={styles.milestones}>
-      <TitleQuest />
+      <TitleWithIcon 
+        text="QUESTS"
+        iconSource={require("../assets/icon-quest.png")}
+        textWidth={58}
+      />
       <View style={styles.questCardsContainer}>
         <QuestCardLExtended property1="Default" valueIconSize1="M" valueIconShowIconCash1 />
         <QuestCardLExtended property1="alert" valueIconSize1="M" valueIconShowIconCash1 />

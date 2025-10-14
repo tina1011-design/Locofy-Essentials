@@ -9,6 +9,7 @@ export const FontFamily = {
 /* Font sizes */
 export const FontSize = {
   fs_10: 10,
+  fs_11: 11,
   fs_12: 12,
   fs_16: 16,
   fs_24: 24,
@@ -55,6 +56,12 @@ export const Color = {
   textQuestCardAlert: "#C33232",
   textQuestCardCashback: "#FF8700",
   textWhite: "#fff",
+  colorViolet: "#6763e2",
+  colorPlum: "#796df7",
+  colorDarkolivegreen: "#556b2f",
+  colorLime: "#00ff00",
+  colorLimegreen100: "#32cd32",
+  colorBlack: "#000000",
 };
 /* Gaps */
 export const Gap = {
@@ -74,6 +81,7 @@ export const Padding = {
   padding_16: 16,
   padding_2: 2,
   padding_24: 24,
+  padding_25: 25,
   padding_4: 4,
   padding_6: 6,
   padding_8: 8,
@@ -101,28 +109,40 @@ export const Width = {
   width_14: 14,
   width_16: 16,
   width_20: 20,
+  width_26: 26,
   width_28: 28,
   width_32: 32,
   width_393: 393,
   width_41: 41,
+  width_44: 44,
+  width_59: 59,
   width_72: 72,
+  width_112: 112,
+  width_114: 114,
+  width_131: 131,
 };
 /* height */
 export const Height = {
   height_11: 11,
+  height_12: 12,
   height_14: 14,
   height_15: 15,
   height_16: 16,
+  height_17: 17,
   height_18: 18,
   height_20: 20,
   height_24: 24,
   height_26: 26,
   height_28: 28,
+  height_32: 32,
   height_34: 34,
   height_40: 40,
+  height_44: 44,
   height_60: 60,
   height_8: 8,
   height_80: 80,
+  height_112: 112,
+  height_144: 144,
 };
 /* min-width */
 export const MinWidth = {

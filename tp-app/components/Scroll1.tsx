@@ -3,6 +3,7 @@ import { StyleSheet, View, ScrollView } from "react-native";
 import Title from "./Title";
 import GameCardLInstall from "./GameCardLInstall";
 import GameCardLPlay from "./GameCardLPlay";
+import GameCardLInstallFeatured from "./GameCardLInstallFeatured";
 import GameCardS from "./GameCardS";
 import GameCardXS from "./GameCardXS";
 import EventCardMPlayEarn from "./EventCardMPlayEarn";
@@ -82,6 +83,12 @@ const Scroll = () => {
           valueIconSize1="M"
           valueIconShowIconCash1
         />
+        <View style={styles.featuredQuestSpacing} />
+        <GameCardLInstallFeatured
+          property1="Install"
+          valueIconSize1="M"
+          valueIconShowIconCash1
+        />
       </View>
     </View>
   );
@@ -116,6 +123,9 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     alignItems: "center",
     alignSelf: "flex-start",
+  },
+  featuredQuestSpacing: {
+    height: 16,
   },
 });
 
