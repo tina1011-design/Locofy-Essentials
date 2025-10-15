@@ -177,11 +177,11 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: Border.br_8,
     backgroundColor: Color.colorLimegreen100,
     width: 55,
-    height: Height.height_4,
+    height: 4,
   },
   cardValue: {
     left: 67,
-    borderRadius: Border.br_24,
+    borderRadius: 24,
     backgroundColor: Color.textWhite,
     paddingHorizontal: Padding.padding_10,
     height: Height.height_20,
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   text: {
     height: 21,
     width: Width.width_26,
-    fontSize: FontSize.fs_14,
+    fontSize: FontSize.fs_12,
     fontWeight: "500",
     fontFamily: FontFamily.poppinsMedium,
     color: Color.colorBlack,

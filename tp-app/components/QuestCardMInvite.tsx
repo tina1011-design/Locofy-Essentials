@@ -17,7 +17,7 @@ import {
   FontFamily,
 } from "../GlobalStyles";
 
-export type QuestCardMType = {
+export type QuestCardMInviteType = {
   showProgressBar?: boolean;
   showIconCash?: boolean;
   progressWidth?: number;
@@ -26,12 +26,12 @@ export type QuestCardMType = {
   property1?: "blue" | "alert";
 };
 
-const QuestCardM = ({
+const QuestCardMInvite = ({
   property1 = "blue",
   showProgressBar = true,
   showIconCash,
   progressWidth = 30,
-}: QuestCardMType) => {
+}: QuestCardMInviteType) => {
   const isAlert = property1 === "alert";
   
   const cardStyles = {
@@ -56,7 +56,7 @@ const QuestCardM = ({
   };
 
   return (
-    <View style={[styles.questcardM, styles.contentBorder, cardStyles]}>
+    <View style={[styles.questcardMInvite, styles.contentBorder, cardStyles]}>
       <View style={[styles.content, styles.boxLayout, contentStyles]}>
         <View style={[styles.box, styles.boxFlexBox, boxStyles]}>
           <View style={[styles.rewardInfo, styles.infoFlexBox, rewardInfoStyles]}>
@@ -65,6 +65,7 @@ const QuestCardM = ({
               size="M"
               value="2400"
               showIconCash={showIconCash}
+              iconCoin={require("../assets/icon-coin1.png")}
             />
           </View>
           <View style={[styles.cardInfo, styles.infoFlexBox]}>
@@ -72,7 +73,13 @@ const QuestCardM = ({
               {isAlert && (
                 <MaterialCommunityIcons name="clock-time-five-outline" size={16} color="#C33232" />
               )}
-              <Text style={[styles.questTitle, titleStyles]}>Quest Title</Text>
+              <Text style={[styles.questTitle, titleStyles]}>Invite Your 1st Friend</Text>
+              <Image
+                style={styles.inviteIcon}
+                contentFit="cover"
+                source={require("../assets/img-acceptedinvites.png")}
+              />
+              <Text style={styles.progressValue}>0/1</Text>
               {isAlert && (
                 <View style={styles.timeContainer}>
                   <MaterialCommunityIcons name="timer-sand-complete" size={16} color="#C33232" />
@@ -80,7 +87,6 @@ const QuestCardM = ({
                 </View>
               )}
             </View>
-            <ProgressBar1 property1="blue" progressWidth={progressWidth} />
           </View>
         </View>
       </View>
@@ -106,7 +112,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignSelf: "stretch",
   },
-  questcardM: {
+  questcardMInvite: {
     boxShadow: BoxShadow.gameCard,
     elevation: 4,
     backgroundColor: Color.questCardDefaultDepth,
@@ -170,6 +176,18 @@ const styles = StyleSheet.create({
     textAlign: "left",
     flex: 1,
   },
+  inviteIcon: {
+    width: 20,
+    height: 20,
+    marginLeft: 4,
+  },
+  progressValue: {
+    fontSize: FontSize.fs_12,
+    fontWeight: "600",
+    fontFamily: FontFamily.poppinsSemiBold,
+    color: Color.textQuestCardDefault,
+    marginLeft: 4,
+  },
 });
 
-export default QuestCardM;
+export default QuestCardMInvite;
