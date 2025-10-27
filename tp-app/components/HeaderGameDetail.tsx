@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import TagGenre from "./TagGenre";
 import Rating from "./Rating";
+import GameIconCard from "./GameIconCard";
 import {
   Width,
   Color,
@@ -15,7 +16,7 @@ import {
   FontFamily,
 } from "../GlobalStyles";
 
-const Header1 = () => {
+const HeaderGameDetail = () => {
   const navigation = useNavigation();
 
   const handleBackPress = () => {
@@ -26,15 +27,9 @@ const Header1 = () => {
     <View style={styles.header}>
       <View style={styles.headerContents}>
         <View style={styles.headerTitle}>
-          <View style={styles.wrapperAppIcon}>
-            <Image
-              style={styles.appIcon}
-              contentFit="cover"
-              source={require("../assets/app-icon.png")}
-            />
-          </View>
+          <GameIconCard />
           <View style={styles.gameInfo}>
-            <Text style={styles.gameName}>Game Name</Text>
+            <Text style={styles.gameName}>Merge Mayor - Match Puzzle</Text>
             <View style={styles.gameGenre}>
               <TagGenre property1="Simulation" simulation="Simulation" />
               <TagGenre property1="Action" simulation="Action" />
@@ -79,28 +74,6 @@ const styles = StyleSheet.create({
     gap: Gap.gap_16,
     flexDirection: "row",
   },
-  wrapperAppIcon: {
-    height: Height.height_80,
-    width: Width.width_72,
-    borderRadius: Border.br_8,
-    minWidth: 72,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  appIcon: {
-    height: "100%",
-    width: "100%",
-    objectFit: "contain",
-    position: "absolute",
-    left: 0,
-    top: 3,
-    transform: [
-      {
-        scale: 1.139,
-      },
-    ],
-  },
   gameInfo: {
     width: 225,
     gap: 7,
@@ -125,4 +98,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Header1;
+export default HeaderGameDetail;

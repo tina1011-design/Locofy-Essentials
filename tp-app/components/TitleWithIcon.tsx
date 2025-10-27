@@ -51,13 +51,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   titleWithIcon: {
-    width: Width.width_393,
-    paddingHorizontal: Padding.padding_16,
     paddingVertical: Padding.padding_4,
+    alignSelf: "flex-start",
   },
   icon: {
-    width: Width.width_20,
-    height: Height.height_20,
+    width: 28,
+    height: 28,
   },
 });
 

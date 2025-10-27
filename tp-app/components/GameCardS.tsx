@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, ImageSourcePropType } from "react-native";
+import { StyleSheet, View, ImageSourcePropType, Text } from "react-native";
 import ValueIcon from "./ValueIcon";
 import {
   Border,
@@ -32,37 +32,43 @@ const GameCardS = ({
   valueIconValueIconFlex1,
 }: GameCardSType) => {
   return (
-    <View style={[styles.gamecardS, styles.cardInfoFlexBox]}>
-      <View style={[styles.content, styles.contentBorder]}>
-        <Image
-          style={styles.appbannerVerticalIcon}
-          contentFit="cover"
-          source={require("../assets/AppBanner_Vertical.png")}
-        />
-        <View style={[styles.cardInfo, styles.cardInfoFlexBox]}>
-          <ValueIcon
-            property1={valueIconProperty1}
-            size="M"
-            value="2400"
-            showIconCash={valueIconShowIconCash}
-            valueIconMarginTop="unset"
+    <View style={styles.cardContainer}>
+      <View style={[styles.gamecardS, styles.cardInfoFlexBox]}>
+        <View style={[styles.content, styles.contentBorder]}>
+          <Image
+            style={styles.appbannerVerticalIcon}
+            contentFit="cover"
+            source={require("../assets/AppBanner_Vertical.png")}
           />
-          <View style={[styles.cashbackValue, styles.cardInfoFlexBox]}>
+          <View style={[styles.cardInfo, styles.cardInfoFlexBox]}>
             <ValueIcon
-              property1="cashback"
-              size="S"
-              value={valueIconValue1}
-              showIconCash
+              property1={valueIconProperty1}
+              size="M"
+              value="2400"
+              showIconCash={valueIconShowIconCash}
               valueIconMarginTop="unset"
             />
+            <View style={[styles.cashbackValue, styles.cardInfoFlexBox]}>
+              <ValueIcon
+                property1="cashback"
+                size="S"
+                value={valueIconValue1}
+                showIconCash
+                valueIconMarginTop="unset"
+              />
+            </View>
           </View>
         </View>
       </View>
+      <Text style={styles.appName}>Merge Mayor - Match Puzzle</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  cardContainer: {
+    alignItems: "center",
+  },
   cardInfoFlexBox: {
     alignItems: "center",
     flexDirection: "row",
@@ -94,26 +100,36 @@ const styles = StyleSheet.create({
   },
   content: {
     borderColor: Color.gameCardBackgroundOutline,
-    height: 218,
+    height: 240,
   },
   appbannerVerticalIcon: {
     width: 148,
-    height: 186,
+    height: 208,
   },
   cardInfo: {
     alignSelf: "stretch",
     backgroundColor: Color.gameCardBackground,
     height: 32,
-    justifyContent: "center",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: Padding.padding_8,
     paddingVertical: Padding.padding_2,
   },
   cashbackValue: {
-    borderColor: Color.questCardOutline,
+    borderColor: "#D3D6FB",
     borderLeftWidth: 1,
     paddingLeft: Padding.padding_8,
     borderStyle: "solid",
     flexDirection: "row",
+  },
+  appName: {
+    color: "#D3D6FB",
+    fontSize: 14,
+    fontWeight: "600",
+    marginTop: 12,
+    textAlign: "left",
+    alignSelf: "flex-start",
+    width: 148,
   },
 });
 

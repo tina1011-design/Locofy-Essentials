@@ -2,14 +2,16 @@ const Stack = createNativeStackNavigator();
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import HomeEssentialsBase from "./screens/HomeEssentialsBase";
-import QuestsFeedEssentialBase from "./screens/QuestsFeedEssentialBase";
+import HomeGamesFeedScreen from "./screens/HomeGamesFeedScreen";
+import QuestsFeedScreen from "./screens/QuestsFeedScreen";
+import SplashScreen from "./screens/SplashScreen";
+import { FTUEProvider } from "./contexts/FTUEContext";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 
 const App = () => {
-  const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
+  const [hideSplashScreen, setHideSplashScreen] = React.useState(false);
 
   const [fontsLoaded, error] = useFonts({
     "LuckiestGuy-Regular": require("./assets/fonts/LuckiestGuy-Regular.ttf"),
@@ -23,28 +25,34 @@ const App = () => {
     return null;
   }
 
+  const handleSplashFinish = () => {
+    setHideSplashScreen(true);
+  };
+
   return (
-    <>
-      <NavigationContainer>
-        {hideSplashScreen ? (
+    <FTUEProvider>
+      {!hideSplashScreen ? (
+        <SplashScreen onFinish={handleSplashFinish} />
+      ) : (
+        <NavigationContainer>
           <Stack.Navigator
             initialRouteName="Button1"
             screenOptions={{ headerShown: false }}
           >
             <Stack.Screen
               name="Button1"
-              component={HomeEssentialsBase}
+              component={HomeGamesFeedScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen
               name="BarEarupto"
-              component={QuestsFeedEssentialBase}
+              component={QuestsFeedScreen}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>
-        ) : null}
-      </NavigationContainer>
-    </>
+        </NavigationContainer>
+      )}
+    </FTUEProvider>
   );
 };
 export default App;

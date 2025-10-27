@@ -1,25 +1,82 @@
 import * as React from "react";
-import { ScrollView, StyleSheet, View, Text, TouchableOpacity, Alert, Clipboard } from "react-native";
+import { ScrollView, StyleSheet, View, Text, TouchableOpacity, Alert, Clipboard, Modal } from "react-native";
 import { Image } from "expo-image";
+import { useFocusEffect } from "@react-navigation/native";
 import NavigationBar from "../components/NavigationBar";
 import QuestCardMInvite from "../components/QuestCardMInvite";
 import GameIconCard from "../components/GameIconCard";
 import GameDataValueIcon from "../components/GameDataValueIcon";
 import RewardCardXS from "../components/RewardCardXS";
+import BtnSigninwithgoogle from "../components/BtnSigninwithgoogle";
+import PopupSigninwithgoogle from "./PopupSigninwithgoogle";
+import PopupValueProposition from "./PopupValueProposition";
+import PopupYourReferrals from "./PopupYourReferrals";
+import { useFTUE } from "../contexts/FTUEContext";
 import { Color, FontFamily, FontSize, Padding } from "../GlobalStyles";
 
 interface ProfileScreenProps {
   activeTab: 'games' | 'rewards' | 'profile';
   onTabPress: (tab: 'games' | 'rewards' | 'profile') => void;
+  onNavigateToTransactionHistory?: () => void;
+  isFirstTimeUser?: boolean;
 }
 
-const ProfileScreen: React.FC<ProfileScreenProps> = ({ activeTab, onTabPress }) => {
+const ProfileScreen: React.FC<ProfileScreenProps> = ({ activeTab, onTabPress, onNavigateToTransactionHistory, isFirstTimeUser }) => {
+  const { profileFtueCompleted, setProfileFtueCompleted } = useFTUE();
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(true);
   const [activityTrackingEnabled, setActivityTrackingEnabled] = React.useState(true);
+  const [showSigninPopup, setShowSigninPopup] = React.useState(false);
+  const [showValuePropositionPopup, setShowValuePropositionPopup] = React.useState(false);
+  const [showYourReferralsPopup, setShowYourReferralsPopup] = React.useState(false);
+
+  // Auto-open FTUE popup when visiting Profile for the first time in FTUE mode
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('Profile focused - FTUE check:', { isFirstTimeUser, profileFtueCompleted });
+      if (isFirstTimeUser && !profileFtueCompleted && activeTab === 'profile') {
+        console.log('Opening FTUE popup in Profile');
+        // Use timeout to ensure screen is fully mounted
+        setTimeout(() => {
+          setShowValuePropositionPopup(true);
+          setProfileFtueCompleted(true);
+        }, 100);
+      }
+    }, [isFirstTimeUser, profileFtueCompleted, activeTab])
+  );
 
   const handleCopyLink = () => {
     Clipboard.setString("http://xxx.xx");
     Alert.alert("Copied!", "Referral link has been copied to clipboard");
+  };
+
+  const handleSigninPress = () => {
+    setShowSigninPopup(true);
+  };
+
+  const handleCloseSigninPopup = () => {
+    setShowSigninPopup(false);
+  };
+
+  const handleInfoBoxPress = () => {
+    setShowValuePropositionPopup(true);
+  };
+
+  const handleCloseValuePropositionPopup = () => {
+    setShowValuePropositionPopup(false);
+  };
+
+  const handleMedalsBoxPress = () => {
+    setShowYourReferralsPopup(true);
+  };
+
+  const handleCloseYourReferralsPopup = () => {
+    setShowYourReferralsPopup(false);
+  };
+
+  const handleTransactionHistoryPress = () => {
+    if (onNavigateToTransactionHistory) {
+      onNavigateToTransactionHistory();
+    }
   };
 
   return (
@@ -32,22 +89,24 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ activeTab, onTabPress }) 
           <Text style={styles.userNameTitle}>User Name</Text>
         </View>
         
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Your Adventures</Text>
-          <View style={styles.gameCardListContainer}>
-            <ScrollView 
-              horizontal 
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.horizontalScrollContent}
-            >
-              <GameIconCard />
-              <GameIconCard />
-              <GameIconCard />
-              <GameIconCard />
-              <GameIconCard />
-            </ScrollView>
+        {!isFirstTimeUser && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Your Adventures</Text>
+            <View style={styles.gameCardListContainer}>
+              <ScrollView 
+                horizontal 
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.horizontalScrollContent}
+              >
+                <GameIconCard />
+                <GameIconCard />
+                <GameIconCard />
+                <GameIconCard />
+                <GameIconCard />
+              </ScrollView>
+            </View>
           </View>
-        </View>
+        )}
         
         <Text style={styles.inviteTitle}>Invite your friends and earn together!</Text>
         
@@ -76,19 +135,23 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ activeTab, onTabPress }) 
             <GameDataValueIcon 
               property1="invite"
               size="L"
-              value="8"
+              value={isFirstTimeUser ? "0" : "8"}
               showIconCash={true}
             />
           </View>
           <View style={styles.divider} />
-          <View style={styles.componentContainer}>
+          <TouchableOpacity 
+            style={styles.componentContainer}
+            onPress={handleMedalsBoxPress}
+            activeOpacity={0.8}
+          >
             <GameDataValueIcon 
               property1="medal"
               size="L"
-              value="25"
+              value={isFirstTimeUser ? "0" : "25"}
               showIconCash={true}
             />
-          </View>
+          </TouchableOpacity>
         </View>
         
         <View style={styles.labelsRow}>
@@ -104,20 +167,20 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ activeTab, onTabPress }) 
         
         <View style={styles.rewardCardsContainer}>
           <View style={styles.rewardCardsRow}>
-            <RewardCardXS state="completed" medalValue="1" />
-            <RewardCardXS state="ready-to-claim" medalValue="3" />
-            <RewardCardXS medalValue="5" />
-            <RewardCardXS medalValue="15" />
+            <RewardCardXS state={isFirstTimeUser ? "default" : "completed"} medalValue="1" rewardValue="100" />
+            <RewardCardXS state={isFirstTimeUser ? "default" : "ready-to-claim"} medalValue="3" rewardValue="200" />
+            <RewardCardXS medalValue="5" rewardValue="320" />
+            <RewardCardXS medalValue="15" rewardValue="480" />
           </View>
           <View style={styles.rewardCardsRow}>
-            <RewardCardXS medalValue="20" />
-            <RewardCardXS medalValue="25" />
-            <RewardCardXS medalValue="30" />
-            <RewardCardXS medalValue="35" />
+            <RewardCardXS medalValue="20" rewardValue="800" />
+            <RewardCardXS medalValue="25" rewardValue="1600" />
+            <RewardCardXS medalValue="30" rewardValue="2400" />
+            <RewardCardXS medalValue="35" rewardValue="3600" />
           </View>
         </View>
         
-        <View style={styles.infoDialog}>
+        <TouchableOpacity style={styles.infoDialog} onPress={handleInfoBoxPress} activeOpacity={0.8}>
           <View style={styles.infoLeftSection}>
             <Image
               style={styles.infoImage}
@@ -129,7 +192,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ activeTab, onTabPress }) 
             <Text style={styles.infoSubtitle}>The more your friend play, the more you earn</Text>
             <Text style={styles.infoParagraph}>Only users who install Treasure Play through your referral link will count as referrals.</Text>
           </View>
-        </View>
+        </TouchableOpacity>
         
         <View style={styles.section}>
           <View style={styles.settingsDivider} />
@@ -209,7 +272,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ activeTab, onTabPress }) 
             </View>
           </View>
           
-          <View style={styles.settingsCard}>
+          <TouchableOpacity style={styles.settingsCard} onPress={handleTransactionHistoryPress} activeOpacity={0.8}>
             <View style={styles.labelContainer}>
               <Image
                 style={styles.notificationIcon}
@@ -221,7 +284,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ activeTab, onTabPress }) 
             <View style={styles.arrowContainer}>
               <Text style={styles.arrowText}>›</Text>
             </View>
-          </View>
+          </TouchableOpacity>
           
           <View style={styles.settingsCard}>
             <View style={styles.labelContainer}>
@@ -241,11 +304,61 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ activeTab, onTabPress }) 
               source={require("../assets/btn-logout.png")}
             />
           </TouchableOpacity>
+          
+          <View style={styles.signinButtonContainer}>
+            <BtnSigninwithgoogle onPress={handleSigninPress} />
+          </View>
         </View>
         
       </ScrollView>
       
       <NavigationBar activeTab={activeTab} onTabPress={onTabPress} />
+      
+      <Modal
+        visible={showSigninPopup}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={handleCloseSigninPopup}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay} 
+          activeOpacity={1} 
+          onPress={handleCloseSigninPopup}
+        >
+          <PopupSigninwithgoogle onClose={handleCloseSigninPopup} />
+        </TouchableOpacity>
+      </Modal>
+
+      <Modal
+        visible={showValuePropositionPopup}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={handleCloseValuePropositionPopup}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay} 
+          activeOpacity={1} 
+          onPress={handleCloseValuePropositionPopup}
+        >
+          <PopupValueProposition onClose={handleCloseValuePropositionPopup} version="profile" />
+        </TouchableOpacity>
+      </Modal>
+
+      <Modal
+        visible={showYourReferralsPopup}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={handleCloseYourReferralsPopup}
+      >
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity 
+            style={StyleSheet.absoluteFillObject}
+            activeOpacity={1} 
+            onPress={handleCloseYourReferralsPopup}
+          />
+          <PopupYourReferrals onClose={handleCloseYourReferralsPopup} />
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -378,19 +491,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   rewardCardsContainer: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 32,
     marginBottom: 16,
+    width: "100%",
   },
   rewardCardsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 20,
-    gap: 8,
+    paddingHorizontal: 0,
     marginBottom: 8,
+    width: "100%",
   },
   inviteButtonImage: {
     width: 280,
@@ -491,6 +604,17 @@ const styles = StyleSheet.create({
   logoutImage: {
     width: 200,
     height: 50,
+  },
+  signinButtonContainer: {
+    alignItems: "center",
+    marginTop: 8,
+    marginBottom: 20,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(32, 20, 59, 0.8)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   infoDialog: {
     backgroundColor: "#AAB0F2",

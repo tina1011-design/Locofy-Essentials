@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, View, Text, ImageBackground } from "react-native";
+import { StyleSheet, View, Text, ImageBackground, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import ValueIcon from "./ValueIcon";
 import {
@@ -13,17 +13,30 @@ import {
   FontFamily,
 } from "../GlobalStyles";
 
-interface RewardCardProps {
+interface RewardCardMProps {
   status?: 'default' | 'ready-to-claim' | 'locked' | 'completed';
   value?: string;
   coinAmount?: string;
+  progress?: number;
+  onPress?: () => void;
 }
 
-const RewardCard: React.FC<RewardCardProps> = ({ 
+const RewardCardM: React.FC<RewardCardMProps> = ({ 
   status = 'default',
   value = '$10',
-  coinAmount = '2400'
+  coinAmount = '2400',
+  progress = 50,
+  onPress
 }) => {
+  // Calculate the narrower bar width (8px shorter than the main bar)
+  const progressBarWidth = 102; // Total width from styles
+  const getNarrowerBarWidth = () => {
+    if (status === 'ready-to-claim') {
+      return progressBarWidth - 8;
+    }
+    return (progressBarWidth * progress / 100) - 8;
+  };
+
   const getCardStyle = () => {
     switch (status) {
       case 'ready-to-claim':
@@ -57,18 +70,31 @@ const RewardCard: React.FC<RewardCardProps> = ({
     return baseStyle;
   };
 
-  return (
-    <View style={getCardStyle()}>
+  const cardContent = (
+    <>
       <View style={[getContentStyle(), styles.contentLayout, { opacity: getContentOpacity() }]}>
          <ImageBackground
            style={styles.appbannerVerticalIcon}
            resizeMode="cover"
            source={require("../assets/GiftCardBanner.png")}
          >
-           {status !== 'completed' && (
+           {status !== 'completed' && status !== 'locked' && (
              <View style={[styles.progressBar, styles.progressLayout]}>
-               <View style={[styles.progressBarChild, styles.progressLayout]} />
-               <View style={[styles.progressBarItem, styles.cardValuePosition]} />
+               <View style={[
+                 styles.progressBarChild, 
+                 styles.progressLayout,
+                 status === 'ready-to-claim' 
+                   ? { width: '100%' }
+                   : { width: `${progress}%` }
+               ]} />
+               <View style={[
+                 styles.progressBarItem, 
+                 styles.cardValuePosition,
+                 { 
+                   width: getNarrowerBarWidth(),
+                   ...(status === 'ready-to-claim' && { borderRadius: Border.br_8 })
+                 }
+               ]} />
              </View>
            )}
           <View style={[styles.cardValue, styles.cardFlexBox]}>
@@ -104,6 +130,20 @@ const RewardCard: React.FC<RewardCardProps> = ({
            />
          </>
        )}
+    </>
+  );
+
+  if (onPress) {
+    return (
+      <TouchableOpacity style={getCardStyle()} onPress={onPress} activeOpacity={0.8}>
+        {cardContent}
+      </TouchableOpacity>
+    );
+  }
+
+  return (
+    <View style={getCardStyle()}>
+      {cardContent}
     </View>
   );
 };
@@ -168,33 +208,32 @@ const styles = StyleSheet.create({
   progressBarChild: {
     top: 0,
     left: 0,
-    backgroundColor: Color.colorLime,
+    backgroundColor: "#31EF1D",
     width: Width.width_59,
   },
   progressBarItem: {
     left: 4,
     borderTopLeftRadius: Border.br_8,
     borderBottomLeftRadius: Border.br_8,
-    backgroundColor: Color.colorLimegreen100,
+    backgroundColor: "#2BD541",
     width: 55,
     height: 4,
   },
   cardValue: {
-    left: 67,
+    right: 4,
     borderRadius: 24,
     backgroundColor: Color.textWhite,
     paddingHorizontal: Padding.padding_10,
     height: Height.height_20,
-    top: 6,
+    top: 4,
     position: "absolute",
   },
   text: {
-    height: 21,
-    width: Width.width_26,
     fontSize: FontSize.fs_12,
     fontWeight: "500",
     fontFamily: FontFamily.poppinsMedium,
     color: Color.colorBlack,
+    textAlign: "center",
   },
   cardInfo: {
     height: Height.height_32,
@@ -264,4 +303,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RewardCard;
+export default RewardCardM;

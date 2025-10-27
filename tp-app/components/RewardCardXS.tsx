@@ -1,5 +1,6 @@
 import * as React from "react";
-import { StyleSheet, Text, View, ImageBackground, Image } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import { Image } from "expo-image";
 import ValueIcon from "./ValueIcon";
 import GameDataValueIcon from "./GameDataValueIcon";
 import {
@@ -21,6 +22,7 @@ export type RewardCardXSType = {
   valueIconValueIconFlex?: number;
   state?: "default" | "completed" | "ready-to-claim";
   medalValue?: string;
+  rewardValue?: string;
 };
 
 const RewardCardXS = ({
@@ -30,27 +32,40 @@ const RewardCardXS = ({
   valueIconValueIconFlex,
   state = "default",
   medalValue = "3",
+  rewardValue = "2400",
 }: RewardCardXSType) => {
   return (
     <View style={styles.container}>
-      <View style={styles.gameDataIcon}>
-        <GameDataValueIcon 
-          property1="medal"
-          size="M"
-          value={medalValue}
-          showIconCash={true}
-        />
-      </View>
+      {state !== "ready-to-claim" && (
+        <View style={styles.gameDataIcon}>
+          <GameDataValueIcon 
+            property1="medal"
+            size="M"
+            value={medalValue}
+            showIconCash={true}
+          />
+        </View>
+      )}
+      {state === "ready-to-claim" && (
+        <View style={styles.claimButtonContainer}>
+          <View style={styles.claimButton}>
+            <Text style={styles.claimButtonText}>Claim</Text>
+          </View>
+        </View>
+      )}
       <View style={state === "completed" ? styles.rewardcardXsCompleted : state === "ready-to-claim" ? styles.rewardcardXsReady : styles.rewardcardXs}>
       <View style={state === "completed" ? styles.contentCompleted : state === "ready-to-claim" ? styles.contentReady : styles.content}>
-        <ImageBackground
-          style={styles.appicon}
-          resizeMode="cover"
-          source={require("../assets/appicon.png")}
-        >
-        </ImageBackground>
         <View style={[state === "ready-to-claim" ? styles.cardInfoReady : styles.cardInfo, styles.cardInfoFlexBox]}>
-          <ValueIcon property1="coin" />
+          <View style={styles.valueIconContainer}>
+            <Image
+              style={styles.coinIcon}
+              contentFit="cover"
+              source={require("../assets/coin_thin.png")}
+            />
+            <View style={styles.coinValueContainer}>
+              <ValueIcon property1="coin" size="M" showIconCash={false} value={rewardValue} />
+            </View>
+          </View>
         </View>
       </View>
       {state === "completed" && (
@@ -88,66 +103,72 @@ const styles = StyleSheet.create({
     elevation: 4,
     backgroundColor: Color.gameCardDepth,
     borderColor: Color.gameCardOutline,
-    paddingBottom: Padding.padding_8,
+    paddingBottom: 4,
     minWidth: 80,
     alignItems: "center",
     flexDirection: "row",
     overflow: "hidden",
     borderWidth: 1,
     borderStyle: "solid",
-    borderRadius: Border.br_8,
+    borderRadius: 16,
   },
   rewardcardXsCompleted: {
     boxShadow: BoxShadow.gameCard,
     elevation: 4,
     backgroundColor: Color.gameCardDepth,
     borderColor: Color.gameCardOutline,
-    paddingBottom: Padding.padding_8,
+    paddingBottom: 4,
     minWidth: 80,
     alignItems: "center",
     flexDirection: "row",
     overflow: "hidden",
     borderWidth: 1,
     borderStyle: "solid",
-    borderRadius: Border.br_8,
+    borderRadius: 16,
   },
   rewardcardXsReady: {
     boxShadow: BoxShadow.gameCard,
     elevation: 4,
-    backgroundColor: "#23BF17",
+    backgroundColor: "#0AA90F",
     borderColor: "#1018B3",
-    paddingBottom: Padding.padding_8,
+    paddingBottom: 4,
     minWidth: 80,
     alignItems: "center",
     flexDirection: "row",
     overflow: "hidden",
     borderWidth: 1,
     borderStyle: "solid",
-    borderRadius: Border.br_8,
+    borderRadius: 16,
   },
   content: {
     borderColor: "#ECF2FE",
     width: 80,
+    height: 80,
     overflow: "hidden",
-    borderWidth: 1,
+    borderWidth: 4,
     borderStyle: "solid",
-    borderRadius: Border.br_8,
+    borderRadius: 16,
+    flexDirection: "column",
   },
   contentCompleted: {
     borderColor: "#ECF2FE",
     width: 80,
+    height: 80,
     overflow: "hidden",
-    borderWidth: 1,
+    borderWidth: 4,
     borderStyle: "solid",
-    borderRadius: Border.br_8,
+    borderRadius: 16,
+    flexDirection: "column",
   },
   contentReady: {
-    borderColor: "#56EA25",
+    borderColor: "#27C61D",
     width: 80,
+    height: 80,
     overflow: "hidden",
-    borderWidth: 1,
+    borderWidth: 4,
     borderStyle: "solid",
-    borderRadius: Border.br_8,
+    borderRadius: 16,
+    flexDirection: "column",
   },
   appicon: {
     width: 80,
@@ -160,10 +181,12 @@ const styles = StyleSheet.create({
   cardInfo: {
     backgroundColor: "#ffffff",
     alignSelf: "stretch",
+    flex: 1,
   },
   cardInfoReady: {
-    backgroundColor: "#88FF2A",
+    backgroundColor: "#3DDC28",
     alignSelf: "stretch",
+    flex: 1,
   },
   overlay: {
     position: "absolute",
@@ -172,14 +195,51 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: "rgba(34, 32, 104, 0.4)",
-    borderRadius: Border.br_8,
+    borderRadius: 16,
     justifyContent: "center",
     alignItems: "center",
   },
   successIcon: {
-    width: 24,
-    height: 24,
-    marginTop: -20,
+    width: 36,
+    height: 36,
+  },
+  valueIconContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: -4,
+    width: "100%",
+  },
+  coinIcon: {
+    width: 40,
+    height: 40,
+  },
+  coinValueContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+  claimButtonContainer: {
+    marginBottom: -10,
+    zIndex: 2,
+    alignItems: "center",
+  },
+  claimButton: {
+    backgroundColor: "#88FF29",
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#1810B3",
+    borderStyle: "solid",
+    width: 64,
+    height: 30,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  claimButtonText: {
+    color: "#006A41",
+    fontSize: FontSize.fs_12,
+    fontFamily: FontFamily.poppinsBold,
+    fontWeight: "bold",
   },
 });
 

@@ -20,6 +20,8 @@ export type GameCardXSType = {
   valueIconValue1?: string;
   valueIconValueIconMarginTop?: string;
   valueIconValueIconFlex?: number;
+  appIcon?: string;
+  showCountdown?: boolean;
 };
 
 const GameCardXS = ({
@@ -27,19 +29,32 @@ const GameCardXS = ({
   valueIconValue1,
   valueIconValueIconMarginTop,
   valueIconValueIconFlex,
+  appIcon,
+  showCountdown = true,
 }: GameCardXSType) => {
+  const getAppIconSource = () => {
+    if (appIcon === "appicon-designville") {
+      return require("../assets/appicon-designville.png");
+    } else if (appIcon === "appicon-mansiontale") {
+      return require("../assets/appicon-mansiontale.png");
+    }
+    return require("../assets/appicon.png");
+  };
+
   return (
     <View style={styles.gamecardXs}>
       <View style={styles.content}>
         <ImageBackground
           style={styles.appicon}
           resizeMode="cover"
-          source={require("../assets/appicon.png")}
+          source={getAppIconSource()}
         >
-          <View style={[styles.countdown, styles.cardInfoFlexBox]}>
-            <MaterialCommunityIcons name="clock-time-five-outline" size={12} color="#fff" />
-            <Text style={styles.timeValue}>00:04</Text>
-          </View>
+          {showCountdown && (
+            <View style={[styles.countdown, styles.cardInfoFlexBox]}>
+              <MaterialCommunityIcons name="clock-time-five-outline" size={12} color="#fff" />
+              <Text style={styles.timeValue}>00:04</Text>
+            </View>
+          )}
           <View style={[styles.boxCashback, styles.cardInfoFlexBox]}>
             <ValueIcon
               property1="cashback"
@@ -90,10 +105,10 @@ const styles = StyleSheet.create({
   appicon: {
     width: 72,
     height: 72,
-    gap: 30,
     alignItems: "flex-end",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     alignSelf: "stretch",
+    position: "relative",
   },
   countdown: {
     gap: Gap.gap_4,
@@ -123,6 +138,9 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(61, 0, 202, 0.8)",
     paddingHorizontal: 0,
     justifyContent: "center",
+    position: "absolute",
+    bottom: 0,
+    right: 0,
   },
   cardInfo: {
     backgroundColor: Color.gameCardBackground,

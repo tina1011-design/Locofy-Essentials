@@ -30,14 +30,12 @@ const GameIconCard = ({
 }: GameIconCardType) => {
   return (
     <View style={styles.gameIconCard}>
-      <View style={styles.content}>
-        <ImageBackground
-          style={styles.appicon}
-          resizeMode="cover"
-          source={require("../assets/appicon.png")}
-        >
-        </ImageBackground>
-      </View>
+      <ImageBackground
+        style={styles.appicon}
+        resizeMode="cover"
+        source={require("../assets/appicon.png")}
+      >
+      </ImageBackground>
     </View>
   );
 };
@@ -49,17 +47,8 @@ const styles = StyleSheet.create({
     backgroundColor: Color.gameCardDepth,
     borderColor: Color.gameCardOutline,
     paddingBottom: Padding.padding_8,
-    width: 72,
     alignItems: "center",
     flexDirection: "row",
-    overflow: "hidden",
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderRadius: Border.br_8,
-  },
-  content: {
-    borderColor: Color.gameCardBackgroundOutline,
-    width: Width.width_72,
     overflow: "hidden",
     borderWidth: 1,
     borderStyle: "solid",
@@ -72,6 +61,11 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     justifyContent: "space-between",
     alignSelf: "stretch",
+    borderRadius: Border.br_8,
+    overflow: "hidden",
+    borderWidth: 1.4,
+    borderColor: "#fff",
+    borderStyle: "solid",
   },
 });
 

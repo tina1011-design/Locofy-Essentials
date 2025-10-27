@@ -61,27 +61,29 @@ const QuestCardLExtended = ({
           <View style={[styles.cardInfo, styles.cardSpaceBlock]}>
             <View style={styles.titleWcountdown}>
               <View style={styles.upToParent}>
-                <View style={[styles.upToRow, styles.upnextContentFlexBox]}>
-                  <Text style={[isAlert ? styles.upToAlert : styles.upTo, styles.upToFlexBox]}>Up to</Text>
-                  <ValueIcon
-                    property1="cash"
-                    size={valueIconSize1}
-                    value="2400"
-                    showIconCash={valueIconShowIconCash1}
-                    valueIconMarginTop="unset"
-                  />
-                  <Text style={[isAlert ? styles.byPlayingAlert : styles.byPlaying, styles.upToFlexBox]}>
-                    by playing!
-                  </Text>
-                </View>
-                <View style={styles.titleAndTimeContainer}>
-                  <Text style={isAlert ? styles.playFor5Alert : styles.playFor5}>Play for 5 minutes</Text>
+                <View style={[styles.upToRow, styles.upnextContentFlexBox, isAlert && styles.rowWithTimer]}>
+                  <View style={[styles.upToRowContent, styles.upnextContentFlexBox]}>
+                    <Text style={[isAlert ? styles.upToAlert : styles.upTo, styles.upToFlexBox]}>Up to</Text>
+                    <ValueIcon
+                      property1="cash"
+                      size={valueIconSize1}
+                      value="2400"
+                      showIconCash={valueIconShowIconCash1}
+                      valueIconMarginTop="unset"
+                    />
+                    <Text style={[isAlert ? styles.byPlayingAlert : styles.byPlaying, styles.upToFlexBox]}>
+                      by playing!
+                    </Text>
+                  </View>
                   {isAlert && (
                     <View style={styles.timeContainer}>
                       <MaterialCommunityIcons name="timer-sand-complete" size={16} color="#C33232" />
                       <Text style={styles.timeValue}>00:15</Text>
                     </View>
                   )}
+                </View>
+                <View style={styles.titleAndTimeContainer}>
+                  <Text style={isAlert ? styles.playFor5Alert : styles.playFor5}>Play for 5 minutes</Text>
                 </View>
               </View>
             </View>
@@ -225,6 +227,13 @@ const styles = StyleSheet.create({
   upToRow: {
     gap: Gap.gap_4,
     alignSelf: "stretch",
+  },
+  rowWithTimer: {
+    justifyContent: "space-between",
+  },
+  upToRowContent: {
+    gap: Gap.gap_4,
+    flex: 1,
   },
   upTo: {
     width: 35,

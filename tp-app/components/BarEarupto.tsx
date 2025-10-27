@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, StyleSheet, View } from "react-native";
+import { Text, StyleSheet, TouchableOpacity } from "react-native";
 import ValueIcon from "./ValueIcon";
 import {
   Border,
@@ -13,11 +13,12 @@ import {
 
 export type BarEaruptoType = {
   showIconCash?: boolean;
+  onPress?: () => void;
 };
 
-const BarEarupto = ({ showIconCash }: BarEaruptoType) => {
+const BarEarupto = ({ showIconCash, onPress }: BarEaruptoType) => {
   return (
-    <View style={styles.valueBox}>
+    <TouchableOpacity style={styles.valueBox} onPress={onPress} activeOpacity={0.8}>
       <Text style={styles.earnUpTo}>Earn Up To :</Text>
       <ValueIcon
         property1="cash"
@@ -26,7 +27,7 @@ const BarEarupto = ({ showIconCash }: BarEaruptoType) => {
         showIconCash={showIconCash}
         iconCoin={require("../assets/icon-cash1.png")}
       />
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -14,6 +14,7 @@ export type ValueIconType = {
 
   /** Style props */
   valueIconMarginTop?: number | string;
+  textColor?: string;
 };
 
 const getValueIconContainerStyle = (styleKey: string) => {
@@ -93,6 +94,7 @@ const ValueIcon = ({
   value = "2400",
   showIconCash = true,
   valueIconMarginTop,
+  textColor,
 }: ValueIconType) => {
   const variantKey = [property1, size].join("-");
 
@@ -101,6 +103,13 @@ const ValueIcon = ({
       ...getStyleValue("marginTop", valueIconMarginTop),
     };
   }, [valueIconMarginTop]);
+
+  // Calculate width based on text length and font size
+  const calculateWidth = () => {
+    const fontSize = size === "S" ? FontSize.fs_12 : size === "M" ? FontSize.fs_16 : FontSize.fs_24;
+    const baseWidth = value.length * (fontSize * 0.7); // Approximate character width
+    return Math.max(baseWidth, size === "S" ? 30 : size === "M" ? 40 : 59);
+  };
 
   return (
     <View
@@ -112,7 +121,11 @@ const ValueIcon = ({
     >
       {!!showIconCash && (
         <Image
-          style={[styles.iconCoin, getIconCoinStyle(variantKey)]}
+          style={[
+            styles.iconCoin, 
+            getIconCoinStyle(variantKey),
+            size === "S" && { marginRight: -5 }
+          ]}
           contentFit="cover"
           source={
             property1 === "cash" 
@@ -123,17 +136,20 @@ const ValueIcon = ({
           }
         />
       )}
-      <SvgTextWithStroke
-        text={value}
-        fontSize={size === "S" ? FontSize.fs_12 : size === "M" ? FontSize.fs_16 : FontSize.fs_24}
-        fontFamily={FontFamily.luckiestGuyRegular}
-        fill={Color.textWhite}
-        stroke="#000000"
-        strokeWidth={2}
-        width={size === "S" ? 30 : size === "M" ? Width.width_41 : 59}
-        height={size === "S" ? Height.height_16 : size === "M" ? Height.height_20 : Height.height_28}
-        y={size === "S" ? 2 : size === "M" ? 3 : 4}
-      />
+      <View style={styles.textWrapper}>
+        <SvgTextWithStroke
+          text={value}
+          fontSize={size === "S" ? FontSize.fs_12 : size === "M" ? FontSize.fs_16 : FontSize.fs_24}
+          fontFamily={FontFamily.luckiestGuyRegular}
+          fill={textColor || Color.textWhite}
+          stroke="#000000"
+          strokeWidth={2}
+          width={calculateWidth()}
+          height={size === "S" ? Height.height_16 : size === "M" ? Height.height_20 : Height.height_28}
+          y={size === "S" ? 2 : size === "M" ? 3 : 4}
+          textAnchor="middle"
+        />
+      </View>
     </View>
   );
 };
@@ -147,6 +163,11 @@ const styles = StyleSheet.create({
   iconCoin: {
     width: Width.width_20,
     height: Height.height_20,
+    marginRight: -8,
+    zIndex: 0,
+  },
+  textWrapper: {
+    zIndex: 2,
   },
 });
 

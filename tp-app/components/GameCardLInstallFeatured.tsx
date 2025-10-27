@@ -53,7 +53,7 @@ const GameCardLInstallFeatured = ({
         </View>
         <View style={styles.purpleBar}>
           <Ionicons name="trophy" size={16} color="white" />
-          <Text style={styles.questTitle}>Quest Title</Text>
+          <Text style={styles.questTitle}>Make a Purchase</Text>
           <View style={styles.timeContainer}>
             <Ionicons name="time" size={16} color="white" />
             <Text style={styles.timeText}>6 days</Text>
@@ -135,6 +135,7 @@ const styles = StyleSheet.create({
   valueBox1: {
     width: 92,
     borderRadius: Border.br_8,
+    alignItems: "flex-start",
   },
   earnupto: {
     fontSize: FontSize.fs_9,
@@ -158,7 +159,7 @@ const styles = StyleSheet.create({
   },
   purpleBar: {
     position: "absolute",
-    bottom: 56,
+    top: 156,
     left: 0,
     width: 360,
     height: 36,

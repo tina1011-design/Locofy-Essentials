@@ -4,7 +4,11 @@ import { StyleSheet, View } from "react-native";
 import BarEarupto from "./BarEarupto";
 import { Width, Height } from "../GlobalStyles";
 
-const BarEarupto1 = () => {
+export type BarEarupto1Type = {
+  onPress?: () => void;
+};
+
+const BarEarupto1 = ({ onPress }: BarEarupto1Type) => {
   return (
     <View style={styles.barEarupto}>
       <Image
@@ -12,7 +16,7 @@ const BarEarupto1 = () => {
         contentFit="cover"
         source={require("../assets/img-info.png")}
       />
-      <BarEarupto showIconCash />
+      <BarEarupto showIconCash onPress={onPress} />
     </View>
   );
 };

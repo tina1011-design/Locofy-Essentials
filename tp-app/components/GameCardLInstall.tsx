@@ -22,17 +22,28 @@ export type GameCardLInstallType = {
 
   /** Variant props */
   property1?: string;
+  bannerImage?: string;
 };
 
 const GameCardLInstall = ({
   property1 = "Install",
   valueIconSize1 = "M",
   valueIconShowIconCash1,
+  bannerImage,
 }: GameCardLInstallType) => {
   const navigation = useNavigation();
 
   const handlePress = () => {
     navigation.navigate("BarEarupto" as never);
+  };
+
+  const getBannerSource = () => {
+    if (bannerImage === "Game-Banner-L-designvillie") {
+      return require("../assets/Game-Banner-L-designvillie.png");
+    } else if (bannerImage === "Game-Banner-L-mansiontale") {
+      return require("../assets/Game-Banner-L-mansiontale.png");
+    }
+    return require("../assets/Game-Banner-L.png");
   };
 
   return (
@@ -45,7 +56,7 @@ const GameCardLInstall = ({
         <Image
           style={styles.gameBannerLIcon}
           contentFit="cover"
-          source={require("../assets/Game-Banner-L.png")}
+          source={getBannerSource()}
         />
         <View style={[styles.cardInfo, styles.detailsFlexBox]}>
           <View style={[styles.details, styles.detailsFlexBox]}>
@@ -103,6 +114,9 @@ const styles = StyleSheet.create({
   },
   contentIcon: {
     borderRadius: Border.br_12,
+    borderColor: Color.gameCardBackgroundOutline,
+    borderWidth: 2,
+    borderStyle: "solid",
     height: 248,
     alignSelf: "stretch",
     overflow: "hidden",
@@ -130,6 +144,7 @@ const styles = StyleSheet.create({
     width: 92,
     borderTopLeftRadius: Border.br_8,
     borderBottomLeftRadius: Border.br_8,
+    alignItems: "flex-start",
   },
   earnupto: {
     fontSize: FontSize.fs_9,

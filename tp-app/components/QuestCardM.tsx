@@ -23,7 +23,7 @@ export type QuestCardMType = {
   progressWidth?: number;
 
   /** Variant props */
-  property1?: "blue" | "alert";
+  property1?: "blue" | "alert" | "completed" | "expired";
 };
 
 const QuestCardM = ({
@@ -33,33 +33,69 @@ const QuestCardM = ({
   progressWidth = 30,
 }: QuestCardMType) => {
   const isAlert = property1 === "alert";
+  const isCompleted = property1 === "completed";
+  const isExpired = property1 === "expired";
+  
+  const getBackgroundColor = () => {
+    if (isAlert) return Color.questCardAlertDepth;
+    if (isCompleted) return "#8C8CD9"; // Light purple for completed
+    if (isExpired) return "#5453AB"; // Purple for expired
+    return Color.questCardDefaultDepth;
+  };
+  
+  const getBorderColor = () => {
+    if (isCompleted) return "#A3B4DF";
+    if (isExpired) return "#6775B0";
+    return isAlert ? Color.questCardAlertBackgroundOutline : Color.questCardDefaultBackgroundOutline;
+  };
+  
+  const getBoxBackgroundColor = () => {
+    if (isAlert) return Color.questCardAlertBackground;
+    if (isCompleted) return "#97A8DA";
+    if (isExpired) return "#5D6DA8";
+    return Color.questCardDefaultBackground;
+  };
+  
+  const getValueBoxColor = () => {
+    if (isAlert) return Color.questCardAlertValueBox;
+    if (isCompleted) return "#97A8DA";
+    if (isExpired) return "#5D6DA8";
+    return Color.questCardDefaultValueBox;
+  };
+  
+  const getTextColor = () => {
+    if (isAlert) return Color.textQuestCardAlert;
+    if (isCompleted) return "#716796";
+    if (isExpired) return "#392F67";
+    return Color.textQuestCardDefault;
+  };
   
   const cardStyles = {
-    backgroundColor: isAlert ? Color.questCardAlertDepth : Color.questCardDefaultDepth,
+    backgroundColor: getBackgroundColor(),
     borderColor: Color.questCardOutline,
   };
   
   const contentStyles = {
-    borderColor: isAlert ? Color.questCardAlertBackgroundOutline : Color.questCardDefaultBackgroundOutline,
+    borderColor: getBorderColor(),
   };
   
   const boxStyles = {
-    backgroundColor: isAlert ? Color.questCardAlertBackground : Color.questCardDefaultBackground,
+    backgroundColor: getBoxBackgroundColor(),
   };
   
   const rewardInfoStyles = {
-    backgroundColor: isAlert ? Color.questCardAlertValueBox : Color.questCardDefaultValueBox,
+    backgroundColor: getValueBoxColor(),
   };
   
   const titleStyles = {
-    color: isAlert ? Color.textQuestCardAlert : Color.textQuestCardDefault,
+    color: getTextColor(),
   };
 
   return (
     <View style={[styles.questcardM, styles.contentBorder, cardStyles]}>
       <View style={[styles.content, styles.boxLayout, contentStyles]}>
         <View style={[styles.box, styles.boxFlexBox, boxStyles]}>
-          <View style={[styles.rewardInfo, styles.infoFlexBox, rewardInfoStyles]}>
+          <View style={[styles.rewardInfo, styles.infoFlexBox, rewardInfoStyles, (isExpired || isCompleted) && { opacity: 0.3 }]}>
             <ValueIcon
               property1="coin"
               size="M"
@@ -72,6 +108,9 @@ const QuestCardM = ({
               {isAlert && (
                 <MaterialCommunityIcons name="clock-time-five-outline" size={16} color="#C33232" />
               )}
+              {isExpired && (
+                <MaterialCommunityIcons name="cancel" size={16} color="#392F67" />
+              )}
               <Text style={[styles.questTitle, titleStyles]}>Quest Title</Text>
               {isAlert && (
                 <View style={styles.timeContainer}>
@@ -79,8 +118,20 @@ const QuestCardM = ({
                   <Text style={styles.timeValue}>00:15</Text>
                 </View>
               )}
+              {isExpired && (
+                <Text style={styles.expiredText}>Expired</Text>
+              )}
+              {isCompleted && (
+                <Image
+                  style={styles.completedIcon}
+                  contentFit="cover"
+                  source={require("../assets/img-success.png")}
+                />
+              )}
             </View>
-            <ProgressBar1 property1="blue" progressWidth={progressWidth} />
+            {!isCompleted && !isExpired && (
+              <ProgressBar1 property1="blue" progressWidth={progressWidth} />
+            )}
           </View>
         </View>
       </View>
@@ -154,6 +205,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
+  },
+  expiredText: {
+    fontSize: FontSize.fs_12,
+    fontWeight: "600",
+    fontFamily: FontFamily.poppinsSemiBold,
+    color: "#392F67",
+    textAlign: "right",
+    marginLeft: "auto",
+  },
+  completedIcon: {
+    width: 24,
+    height: 24,
+    marginLeft: "auto",
   },
   timeValue: {
     fontSize: FontSize.fs_12,

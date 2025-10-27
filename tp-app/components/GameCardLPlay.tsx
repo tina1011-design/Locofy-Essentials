@@ -50,7 +50,7 @@ const GameCardLPlay = ({
         />
         <View style={styles.purpleBar}>
           <Ionicons name="trophy" size={16} color="white" />
-          <Text style={styles.questTitle}>Quest Title</Text>
+          <Text style={styles.questTitle}>Reach Level 2</Text>
           <View style={styles.timeContainer}>
             <Ionicons name="time" size={16} color="white" />
             <Text style={styles.timeText}>6 days</Text>
@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
   valueBox1: {
     width: 92,
     borderRadius: Border.br_8,
+    alignItems: "flex-start",
   },
   earnupto: {
     fontSize: FontSize.fs_9,
