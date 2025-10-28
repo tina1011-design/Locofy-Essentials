@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   },
   yourGames: {
     height: Height.height_24,
-    width: 140,
+    flex: 1,
     fontSize: FontSize.fs_16,
     fontWeight: "600",
     fontFamily: FontFamily.poppinsSemiBold,

@@ -20,6 +20,7 @@ import {
 export type QuestCardLCashbackType = {
   valueIconSize1?: string;
   valueIconShowIconCash1?: boolean;
+  progressWidth?: number;
 
   /** Variant props */
   property1?: "Default" | "alert";
@@ -29,6 +30,7 @@ const QuestCardLCashback = ({
   property1 = "Default",
   valueIconSize1,
   valueIconShowIconCash1,
+  progressWidth,
 }: QuestCardLCashbackType) => {
   const isAlert = property1 === "alert";
   
@@ -91,7 +93,7 @@ const QuestCardLCashback = ({
                 </View>
               </View>
             </View>
-            <ProgressBar1 property1="Default" />
+            <ProgressBar1 property1="Default" progressWidth={progressWidth} />
           </View>
         </View>
       </View>

@@ -103,6 +103,9 @@ const styles = StyleSheet.create({
   },
   contentIcon: {
     borderRadius: Border.br_12,
+    borderColor: Color.gameCardBackgroundOutline,
+    borderWidth: 2,
+    borderStyle: "solid",
     height: 248,
     alignSelf: "stretch",
     overflow: "hidden",
@@ -153,7 +156,7 @@ const styles = StyleSheet.create({
   },
   purpleBar: {
     position: "absolute",
-    bottom: 56,
+    top: 156,
     left: 0,
     width: 360,
     height: 36,

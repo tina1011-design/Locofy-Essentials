@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, StyleSheet, View, Modal, TouchableOpacity, Text, Pressable } from "react-native";
+import { ScrollView, StyleSheet, View, Modal, TouchableOpacity, Text, Pressable, Switch, Animated } from "react-native";
 import { Image } from "expo-image";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
@@ -9,21 +9,24 @@ import Milestones from "../components/Milestones";
 import DialogTip from "../components/DialogTip";
 import BtnPlayNEarn from "../components/BtnPlayNEarn";
 import BtnContactSupport from "../components/BtnContactSupport";
+import QuestCardM from "../components/QuestCardM";
 import PopupValueProposition from "./PopupValueProposition";
 import { useFTUE } from "../contexts/FTUEContext";
 import { Gap, Color, Width, Border, Height, Padding, FontFamily, FontSize } from "../GlobalStyles";
 
 const QuestsFeedScreen = () => {
-  const { isFirstTimeUser, questsFeedFtueCompleted, setQuestsFeedFtueCompleted } = useFTUE();
+  const { isFirstTimeUser, isFTUETesting, questsFeedFtueCompleted, setQuestsFeedFtueCompleted } = useFTUE();
   const [showGameDetails, setShowGameDetails] = useState(false);
   const [showValuePropositionPopup, setShowValuePropositionPopup] = useState(false);
   const [showImageOverlay, setShowImageOverlay] = useState(false);
+  const [questsAvailable, setQuestsAvailable] = useState(true);
+  const shakeAnim = React.useRef(new Animated.Value(0)).current;
 
-  // Auto-open FTUE popup when visiting QuestsFeed for the first time in FTUE mode
+  // Auto-open FTUE popup when visiting QuestsFeed for the first time in FTUE mode or FTUE Testing mode
   useFocusEffect(
     React.useCallback(() => {
-      console.log('QuestsFeed focused - FTUE check:', { isFirstTimeUser, questsFeedFtueCompleted });
-      if (isFirstTimeUser && !questsFeedFtueCompleted) {
+      console.log('QuestsFeed focused - FTUE check:', { isFirstTimeUser, isFTUETesting, questsFeedFtueCompleted });
+      if ((isFirstTimeUser || isFTUETesting) && !questsFeedFtueCompleted) {
         console.log('Opening FTUE popup in QuestsFeed');
         // Use timeout to ensure screen is fully mounted
         setTimeout(() => {
@@ -31,8 +34,47 @@ const QuestsFeedScreen = () => {
           setQuestsFeedFtueCompleted(true);
         }, 100);
       }
-    }, [isFirstTimeUser, questsFeedFtueCompleted])
+    }, [isFirstTimeUser, isFTUETesting, questsFeedFtueCompleted])
   );
+
+  // Vertical shaking animation for Play&Earn button in FTUE Testing mode
+  React.useEffect(() => {
+    if (isFTUETesting) {
+      const shakeAnimation = Animated.loop(
+        Animated.sequence([
+          Animated.delay(16000), // Wait 16 seconds
+          Animated.timing(shakeAnim, {
+            toValue: -3,
+            duration: 50,
+            useNativeDriver: true,
+          }),
+          Animated.timing(shakeAnim, {
+            toValue: 3,
+            duration: 50,
+            useNativeDriver: true,
+          }),
+          Animated.timing(shakeAnim, {
+            toValue: -3,
+            duration: 50,
+            useNativeDriver: true,
+          }),
+          Animated.timing(shakeAnim, {
+            toValue: 3,
+            duration: 50,
+            useNativeDriver: true,
+          }),
+          Animated.timing(shakeAnim, {
+            toValue: 0,
+            duration: 50,
+            useNativeDriver: true,
+          }),
+        ])
+      );
+      shakeAnimation.start();
+      
+      return () => shakeAnimation.stop();
+    }
+  }, [isFTUETesting, shakeAnim]);
 
   const handleEarnUpToPress = () => {
     setShowValuePropositionPopup(true);
@@ -146,14 +188,63 @@ const QuestsFeedScreen = () => {
               </ScrollView>
             </View>
           )}
-          <Milestones />
-          <DialogTip />
+          
+          {/* Hide toggle in FTUE Testing mode */}
+          {!isFTUETesting && (
+            <View style={styles.toggleRow}>
+              <Text style={styles.toggleText}>Quests Available</Text>
+              <Switch
+                value={questsAvailable}
+                onValueChange={setQuestsAvailable}
+                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                thumbColor={questsAvailable ? "#f5dd4b" : "#f4f3f4"}
+              />
+            </View>
+          )}
+          
+          {questsAvailable || isFTUETesting ? (
+            <>
+              <Milestones isFTUETesting={isFTUETesting} />
+              <DialogTip />
+            </>
+          ) : (
+            <>
+              <View style={styles.noQuestsContainer}>
+                <Image
+                  style={styles.noQuestsImage}
+                  contentFit="contain"
+                  source={require("../assets/img-nonewquest.png")}
+                />
+                <Text style={styles.noQuestsBody}>
+                  New Quests will appear soon - Stay tuned!
+                </Text>
+              </View>
+              <DialogTip />
+              <View style={styles.expiredQuestsContainer}>
+                <QuestCardM property1="expired" showProgressBar={false} />
+                <QuestCardM property1="expired" showProgressBar={false} />
+              </View>
+            </>
+          )}
         </View>
       </View>
       </ScrollView>
-      <View style={styles.btnPlaynearnWrapper}>
-        <BtnPlayNEarn />
-      </View>
+      {isFTUETesting ? (
+        <Animated.View 
+          style={[
+            styles.btnPlaynearnWrapper,
+            {
+              transform: [{ translateY: shakeAnim }],
+            }
+          ]}
+        >
+          <BtnPlayNEarn />
+        </Animated.View>
+      ) : (
+        <View style={styles.btnPlaynearnWrapper}>
+          <BtnPlayNEarn />
+        </View>
+      )}
       
       <Modal
         visible={showValuePropositionPopup}
@@ -341,6 +432,46 @@ const styles = StyleSheet.create({
   fullScreenImage: {
     width: "100%",
     height: "100%",
+  },
+  toggleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: 16,
+    paddingLeft: 16,
+    paddingRight: 24,
+    alignSelf: "stretch",
+  },
+  toggleText: {
+    fontSize: FontSize.fs_14,
+    fontFamily: FontFamily.poppinsMedium,
+    color: Color.textWhite,
+  },
+  noQuestsContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+    width: "100%",
+  },
+  noQuestsImage: {
+    width: 260,
+    height: 260,
+    marginBottom: 24,
+  },
+  noQuestsBody: {
+    fontSize: FontSize.fs_14,
+    fontFamily: FontFamily.poppinsRegular,
+    color: Color.textWhite,
+    textAlign: "center",
+    opacity: 0.8,
+  },
+  expiredQuestsContainer: {
+    width: "100%",
+    gap: 16,
+    alignItems: "center",
+    paddingHorizontal: 16,
   },
 });
 

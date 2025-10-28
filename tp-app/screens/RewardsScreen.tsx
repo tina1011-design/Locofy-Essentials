@@ -1,11 +1,13 @@
 import * as React from "react";
-import { StyleSheet, View, ScrollView, Text, Modal, Animated, Dimensions, Switch } from "react-native";
+import { StyleSheet, View, ScrollView, Text, Modal, Animated, Dimensions, Switch, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
+import { useNavigation } from "@react-navigation/native";
 import Header from "../components/Header";
 import NavigationBar from "../components/NavigationBar";
 import RewardCardM from "../components/RewardCardM";
 import TitleWithIcon from "../components/TitleWithIcon";
 import PopupGiftcardCheckout from "./PopupGiftcardCheckout";
+import { useFTUE } from "../contexts/FTUEContext";
 import { Color, FontSize, FontFamily } from "../GlobalStyles";
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -19,6 +21,8 @@ interface RewardsScreenProps {
 }
 
 const RewardsScreen: React.FC<RewardsScreenProps> = ({ activeTab, onTabPress, coinBalance, cashBalance, isFirstTimeUser }) => {
+  const navigation = useNavigation();
+  const { isFTUETesting } = useFTUE();
   const [showCheckoutPopup, setShowCheckoutPopup] = React.useState(false);
   const [offersEnabled, setOffersEnabled] = React.useState(true);
   const slideAnim = React.useRef(new Animated.Value(SCREEN_WIDTH)).current;
@@ -49,6 +53,10 @@ const RewardsScreen: React.FC<RewardsScreenProps> = ({ activeTab, onTabPress, co
       slideAnim.setValue(SCREEN_WIDTH); // Reset position
     });
   };
+
+  const handlePlayToUnlock = () => {
+    navigation.navigate('BarEarupto' as never); // Navigate to QuestsFeed screen
+  };
   
   // Calculate progress based on coin balance
   const calculateProgress = (requiredCoins: number): number => {
@@ -77,7 +85,7 @@ const RewardsScreen: React.FC<RewardsScreenProps> = ({ activeTab, onTabPress, co
     { id: 12, value: '$5', coinAmount: 1200 },
   ];
   
-  // Generate Merge Mayor rewards with dynamic status and progress based on FTUE mode
+  // Generate Merge Mayor rewards with dynamic status and progress based on FTUE/FTUE Testing mode
   const rewards = rewardsBaseData.map((reward) => {
     if (isFirstTimeUser) {
       // In FTUE mode, only show first 3 cards, all locked
@@ -90,6 +98,19 @@ const RewardsScreen: React.FC<RewardsScreenProps> = ({ activeTab, onTabPress, co
         };
       }
       return null; // Don't show cards 4-6 in FTUE mode
+    } else if (isFTUETesting) {
+      // In FTUE Testing mode: only show first card in locked state with custom banner and FREE text
+      if (reward.id === 1) {
+        return {
+          ...reward,
+          coinAmount: reward.coinAmount.toLocaleString(),
+          status: 'locked' as const,
+          progress: 0,
+          bannerImage: 'GiftCardBanner-Mergemayor',
+          showFreeText: true,
+        };
+      }
+      return null; // Don't show other cards in FTUE Testing mode
     } else {
       // Normal mode - use predefined statuses
       let status: 'ready-to-claim' | 'default' | 'locked' | 'completed';
@@ -119,44 +140,64 @@ const RewardsScreen: React.FC<RewardsScreenProps> = ({ activeTab, onTabPress, co
   }).filter(Boolean); // Remove null entries in FTUE mode
 
   // Split Merge Mayor rewards into rows of 3
-  const firstRow = isFirstTimeUser ? rewards : rewards.slice(0, 3);
-  const secondRow = isFirstTimeUser ? [] : rewards.slice(3, 6);
+  const firstRow = (isFirstTimeUser || isFTUETesting) ? rewards : rewards.slice(0, 3);
+  const secondRow = (isFirstTimeUser || isFTUETesting) ? [] : rewards.slice(3, 6);
   
   // Generate Google Play rewards
-  const googleCards = googleBaseData.map((reward) => {
-    if (isFirstTimeUser) {
-      // In FTUE mode, all 6 cards are in default state with real progress
-      return {
-        ...reward,
-        coinAmount: reward.coinAmount.toLocaleString(),
-        status: 'default' as const,
-        progress: calculateProgress(reward.coinAmount),
-      };
-    } else {
-      // Normal mode - filter out locked and completed states
-      // Only show cards that would be ready-to-claim or default
-      if (reward.id === 7) {
-        return {
-          ...reward,
-          coinAmount: reward.coinAmount.toLocaleString(),
-          status: 'ready-to-claim' as const,
-          progress: 100,
-        };
-      } else if (reward.id === 8 || reward.id === 9) {
+  const googleCards = (() => {
+    if (isFTUETesting) {
+      // In FTUE Testing mode: only show 3 cards in specific order with 100 coins progress
+      const ftueCards = [
+        { id: 12, value: '$5', coinAmount: 1200 },  // First card: 100/1200 = 8.33%
+        { id: 7, value: '$10', coinAmount: 2400 },   // Second card: 100/2400 = 4.17%
+        { id: 8, value: '$15', coinAmount: 3600 },   // Third card: 100/3600 = 2.78%
+      ];
+      return ftueCards.map((reward) => {
+        const progressPercentage = Math.round((100 / reward.coinAmount) * 100);
         return {
           ...reward,
           coinAmount: reward.coinAmount.toLocaleString(),
           status: 'default' as const,
-          progress: reward.id === 8 ? 65 : 30,
+          progress: progressPercentage,
         };
-      }
-      return null; // Don't show locked/completed cards in Google section
+      });
     }
-  }).filter(Boolean);
+    
+    return googleBaseData.map((reward) => {
+      if (isFirstTimeUser) {
+        // In FTUE mode, all 6 cards are in default state with real progress
+        return {
+          ...reward,
+          coinAmount: reward.coinAmount.toLocaleString(),
+          status: 'default' as const,
+          progress: calculateProgress(reward.coinAmount),
+        };
+      } else {
+        // Normal mode - filter out locked and completed states
+        // Only show cards that would be ready-to-claim or default
+        if (reward.id === 7) {
+          return {
+            ...reward,
+            coinAmount: reward.coinAmount.toLocaleString(),
+            status: 'ready-to-claim' as const,
+            progress: 100,
+          };
+        } else if (reward.id === 8 || reward.id === 9) {
+          return {
+            ...reward,
+            coinAmount: reward.coinAmount.toLocaleString(),
+            status: 'default' as const,
+            progress: reward.id === 8 ? 65 : 30,
+          };
+        }
+        return null; // Don't show locked/completed cards in Google section
+      }
+    }).filter(Boolean);
+  })();
   
   // Split Google cards into rows of 3
   const googleFirstRow = googleCards.slice(0, 3);
-  const googleSecondRow = googleCards.slice(3, 6);
+  const googleSecondRow = isFTUETesting ? [] : googleCards.slice(3, 6);
 
   return (
     <View style={styles.container}>
@@ -184,11 +225,13 @@ const RewardsScreen: React.FC<RewardsScreenProps> = ({ activeTab, onTabPress, co
                 iconSource={require("../assets/reward-title-mm.png")}
                 textWidth={130}
               />
-              <Image
-                style={styles.playToUnlockButton}
-                contentFit="cover"
-                source={require("../assets/btn-playtounlock.png")}
-              />
+              <TouchableOpacity onPress={handlePlayToUnlock} activeOpacity={0.8}>
+                <Image
+                  style={styles.playToUnlockButton}
+                  contentFit="cover"
+                  source={require("../assets/btn-playtounlock.png")}
+                />
+              </TouchableOpacity>
             </View>
             
             {/* First Row - 3 cards */}
@@ -201,6 +244,8 @@ const RewardsScreen: React.FC<RewardsScreenProps> = ({ activeTab, onTabPress, co
                   coinAmount={reward.coinAmount}
                   progress={reward.progress}
                   onPress={reward.status === 'default' ? handleDefaultCardPress : undefined}
+                  bannerImage={reward.bannerImage}
+                  showFreeText={reward.showFreeText}
                 />
               ))}
             </View>
@@ -216,46 +261,151 @@ const RewardsScreen: React.FC<RewardsScreenProps> = ({ activeTab, onTabPress, co
                     coinAmount={reward.coinAmount}
                     progress={reward.progress}
                     onPress={reward.status === 'default' ? handleDefaultCardPress : undefined}
+                    bannerImage={reward.bannerImage}
+                    showFreeText={reward.showFreeText}
                   />
                 ))}
               </View>
             )}
 
-            <View style={styles.titleRow}>
-              <TitleWithIcon 
-                text="GOOGLE PLAY"
-                iconSource={require("../assets/reward-title-google.png")}
-                textWidth={120}
-              />
-            </View>
-            
-            {/* Third Row - Google cards (filtered) */}
-            <View style={styles.rewardsRow}>
-              {googleFirstRow.map((reward) => (
-                <RewardCardM
-                  key={`google-${reward.id}`}
-                  status={reward.status}
-                  value={reward.value}
-                  coinAmount={reward.coinAmount}
-                  progress={reward.progress}
-                  onPress={reward.status === 'default' ? handleDefaultCardPress : undefined}
-                />
-              ))}
-            </View>
-            
-            {/* Fourth Row - Google cards (filtered) */}
-            <View style={styles.rewardsRow}>
-              {googleSecondRow.map((reward) => (
-                <RewardCardM
-                  key={`google-${reward.id}`}
-                  status={reward.status}
-                  value={reward.value}
-                  coinAmount={reward.coinAmount}
-                  progress={reward.progress}
-                  onPress={reward.status === 'default' ? handleDefaultCardPress : undefined}
-                />
-              ))}
-            </View>
+            {/* Google Play Section - Duplicate 3 times in FTUE Testing mode */}
+            {isFTUETesting ? (
+              <>
+                {/* First Google Play Section */}
+                <View style={styles.titleRow}>
+                  <TitleWithIcon 
+                    text="GOOGLE PLAY"
+                    iconSource={require("../assets/reward-title-google.png")}
+                    textWidth={120}
+                  />
+                </View>
+                <View style={styles.rewardsRow}>
+                  {googleFirstRow.map((reward) => (
+                    <RewardCardM
+                      key={`google-1-${reward.id}`}
+                      status={reward.status}
+                      value={reward.value}
+                      coinAmount={reward.coinAmount}
+                      progress={reward.progress}
+                      onPress={reward.status === 'default' ? handleDefaultCardPress : undefined}
+                      bannerImage={reward.bannerImage}
+                      showFreeText={reward.showFreeText}
+                    />
+                  ))}
+                </View>
+
+                {/* Second Section - Spotify */}
+                <View style={styles.titleRow}>
+                  <TitleWithIcon 
+                    text="SPOTIFY"
+                    iconSource={require("../assets/reward-title-google.png")}
+                    textWidth={120}
+                  />
+                </View>
+                <View style={styles.rewardsRow}>
+                  {googleFirstRow.map((reward) => (
+                    <RewardCardM
+                      key={`spotify-${reward.id}`}
+                      status={reward.status}
+                      value={reward.value}
+                      coinAmount={reward.coinAmount}
+                      progress={reward.progress}
+                      onPress={reward.status === 'default' ? handleDefaultCardPress : undefined}
+                      bannerImage="GiftCardBanner-Spotify"
+                      showFreeText={reward.showFreeText}
+                    />
+                  ))}
+                </View>
+
+                {/* Third Section - TK MAXX */}
+                <View style={styles.titleRow}>
+                  <TitleWithIcon 
+                    text="TK MAXX"
+                    iconSource={require("../assets/reward-title-google.png")}
+                    textWidth={120}
+                  />
+                </View>
+                <View style={styles.rewardsRow}>
+                  {googleFirstRow.map((reward) => (
+                    <RewardCardM
+                      key={`tkmaxx-${reward.id}`}
+                      status={reward.status}
+                      value={reward.value}
+                      coinAmount={reward.coinAmount}
+                      progress={reward.progress}
+                      onPress={reward.status === 'default' ? handleDefaultCardPress : undefined}
+                      bannerImage="GiftCardBanner-TKMAXX"
+                      showFreeText={reward.showFreeText}
+                    />
+                  ))}
+                </View>
+
+                {/* Fourth Section - Carrefour */}
+                <View style={styles.titleRow}>
+                  <TitleWithIcon 
+                    text="CARREFOUR"
+                    iconSource={require("../assets/reward-title-google.png")}
+                    textWidth={120}
+                  />
+                </View>
+                <View style={styles.rewardsRow}>
+                  {googleFirstRow.map((reward) => (
+                    <RewardCardM
+                      key={`carrefour-${reward.id}`}
+                      status={reward.status}
+                      value={reward.value}
+                      coinAmount={reward.coinAmount}
+                      progress={reward.progress}
+                      onPress={reward.status === 'default' ? handleDefaultCardPress : undefined}
+                      bannerImage="GiftCardBanner-Carrefour"
+                      showFreeText={reward.showFreeText}
+                    />
+                  ))}
+                </View>
+              </>
+            ) : (
+              <>
+                <View style={styles.titleRow}>
+                  <TitleWithIcon 
+                    text="GOOGLE PLAY"
+                    iconSource={require("../assets/reward-title-google.png")}
+                    textWidth={120}
+                  />
+                </View>
+                
+                {/* Third Row - Google cards (filtered) */}
+                <View style={styles.rewardsRow}>
+                  {googleFirstRow.map((reward) => (
+                    <RewardCardM
+                      key={`google-${reward.id}`}
+                      status={reward.status}
+                      value={reward.value}
+                      coinAmount={reward.coinAmount}
+                      progress={reward.progress}
+                      onPress={reward.status === 'default' ? handleDefaultCardPress : undefined}
+                      bannerImage={reward.bannerImage}
+                      showFreeText={reward.showFreeText}
+                    />
+                  ))}
+                </View>
+                
+                {/* Fourth Row - Google cards (filtered) */}
+                <View style={styles.rewardsRow}>
+                  {googleSecondRow.map((reward) => (
+                    <RewardCardM
+                      key={`google-${reward.id}`}
+                      status={reward.status}
+                      value={reward.value}
+                      coinAmount={reward.coinAmount}
+                      progress={reward.progress}
+                      onPress={reward.status === 'default' ? handleDefaultCardPress : undefined}
+                      bannerImage={reward.bannerImage}
+                      showFreeText={reward.showFreeText}
+                    />
+                  ))}
+                </View>
+              </>
+            )}
           </>
         ) : (
           <View style={styles.unavailableContainer}>

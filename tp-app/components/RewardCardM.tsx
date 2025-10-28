@@ -19,6 +19,8 @@ interface RewardCardMProps {
   coinAmount?: string;
   progress?: number;
   onPress?: () => void;
+  bannerImage?: string;
+  showFreeText?: boolean;
 }
 
 const RewardCardM: React.FC<RewardCardMProps> = ({ 
@@ -26,7 +28,9 @@ const RewardCardM: React.FC<RewardCardMProps> = ({
   value = '$10',
   coinAmount = '2400',
   progress = 50,
-  onPress
+  onPress,
+  bannerImage,
+  showFreeText = false
 }) => {
   // Calculate the narrower bar width (8px shorter than the main bar)
   const progressBarWidth = 102; // Total width from styles
@@ -70,13 +74,26 @@ const RewardCardM: React.FC<RewardCardMProps> = ({
     return baseStyle;
   };
 
+  const getBannerSource = () => {
+    if (bannerImage === 'GiftCardBanner-Mergemayor') {
+      return require("../assets/GiftCardBanner-Mergemayor.png");
+    } else if (bannerImage === 'GiftCardBanner-Spotify') {
+      return require("../assets/GiftCardBanner-Spotify.jpg");
+    } else if (bannerImage === 'GiftCardBanner-TKMAXX') {
+      return require("../assets/GiftCardBanner-TKMAXX.jpg");
+    } else if (bannerImage === 'GiftCardBanner-Carrefour') {
+      return require("../assets/GiftCardBanner-Carrefour.jpg");
+    }
+    return require("../assets/GiftCardBanner.png");
+  };
+
   const cardContent = (
     <>
       <View style={[getContentStyle(), styles.contentLayout, { opacity: getContentOpacity() }]}>
          <ImageBackground
            style={styles.appbannerVerticalIcon}
            resizeMode="cover"
-           source={require("../assets/GiftCardBanner.png")}
+           source={getBannerSource()}
          >
            {status !== 'completed' && status !== 'locked' && (
              <View style={[styles.progressBar, styles.progressLayout]}>
@@ -97,18 +114,24 @@ const RewardCardM: React.FC<RewardCardMProps> = ({
                ]} />
              </View>
            )}
-          <View style={[styles.cardValue, styles.cardFlexBox]}>
-            <Text style={[styles.text, styles.textFlexBox]}>{value}</Text>
-          </View>
+          {!showFreeText && (
+            <View style={[styles.cardValue, styles.cardFlexBox]}>
+              <Text style={[styles.text, styles.textFlexBox]}>{value}</Text>
+            </View>
+          )}
         </ImageBackground>
           <View style={[getCardInfoStyle(), styles.cardFlexBox]}>
             {status !== 'completed' && (
-              <ValueIcon
-                property1="coin"
-                size="M"
-                value={coinAmount}
-                showIconCash={true}
-              />
+              showFreeText ? (
+                <Text style={styles.freeText}>FREE</Text>
+              ) : (
+                <ValueIcon
+                  property1="coin"
+                  size="M"
+                  value={coinAmount}
+                  showIconCash={true}
+                />
+              )
             )}
           </View>
        </View>
@@ -240,6 +263,13 @@ const styles = StyleSheet.create({
     backgroundColor: Color.gameCardBackground,
     paddingHorizontal: Padding.padding_8,
     width: Width.width_112,
+  },
+  freeText: {
+    fontSize: 16,
+    fontWeight: "700",
+    fontFamily: FontFamily.poppinsBold,
+    color: "#000000",
+    textAlign: "center",
   },
   readyToClaimCard: {
     borderColor: Color.questCardOutline,

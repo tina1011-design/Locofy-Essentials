@@ -22,18 +22,18 @@ interface ProfileScreenProps {
 }
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ activeTab, onTabPress, onNavigateToTransactionHistory, isFirstTimeUser }) => {
-  const { profileFtueCompleted, setProfileFtueCompleted } = useFTUE();
+  const { isFTUETesting, profileFtueCompleted, setProfileFtueCompleted } = useFTUE();
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(true);
   const [activityTrackingEnabled, setActivityTrackingEnabled] = React.useState(true);
   const [showSigninPopup, setShowSigninPopup] = React.useState(false);
   const [showValuePropositionPopup, setShowValuePropositionPopup] = React.useState(false);
   const [showYourReferralsPopup, setShowYourReferralsPopup] = React.useState(false);
 
-  // Auto-open FTUE popup when visiting Profile for the first time in FTUE mode
+  // Auto-open FTUE popup when visiting Profile for the first time in FTUE mode or FTUE Testing mode
   useFocusEffect(
     React.useCallback(() => {
-      console.log('Profile focused - FTUE check:', { isFirstTimeUser, profileFtueCompleted });
-      if (isFirstTimeUser && !profileFtueCompleted && activeTab === 'profile') {
+      console.log('Profile focused - FTUE check:', { isFirstTimeUser, isFTUETesting, profileFtueCompleted });
+      if ((isFirstTimeUser || isFTUETesting) && !profileFtueCompleted && activeTab === 'profile') {
         console.log('Opening FTUE popup in Profile');
         // Use timeout to ensure screen is fully mounted
         setTimeout(() => {
@@ -41,7 +41,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ activeTab, onTabPress, on
           setProfileFtueCompleted(true);
         }, 100);
       }
-    }, [isFirstTimeUser, profileFtueCompleted, activeTab])
+    }, [isFirstTimeUser, isFTUETesting, profileFtueCompleted, activeTab])
   );
 
   const handleCopyLink = () => {
@@ -86,10 +86,30 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ activeTab, onTabPress, on
         contentContainerStyle={styles.scrollContent}
       >
         <View style={styles.section}>
-          <Text style={styles.userNameTitle}>User Name</Text>
+          <View style={styles.userNameRow}>
+            {isFTUETesting && (
+              <Image
+                style={styles.avatarFrame}
+                contentFit="contain"
+                source={require("../assets/Header-avatar-frame.png")}
+              />
+            )}
+            <Text style={styles.userNameTitle}>
+              {isFTUETesting ? "adventurer#12ab1" : "User Name"}
+            </Text>
+            {isFTUETesting && (
+              <TouchableOpacity 
+                style={styles.signInButton}
+                onPress={handleSigninPress}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.signInButtonText}>Sign in</Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
         
-        {!isFirstTimeUser && (
+        {!isFirstTimeUser && !isFTUETesting && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Your Adventures</Text>
             <View style={styles.gameCardListContainer}>
@@ -104,6 +124,22 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ activeTab, onTabPress, on
                 <GameIconCard />
                 <GameIconCard />
               </ScrollView>
+            </View>
+          </View>
+        )}
+        
+        {isFTUETesting && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Your Adventures</Text>
+            <View style={styles.noAdventuresContainer}>
+              <Text style={styles.noAdventuresText}>No adventures yet</Text>
+              <TouchableOpacity 
+                style={styles.startGameButton}
+                onPress={() => onTabPress('games')}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.startGameButtonText}>Start your first game</Text>
+              </TouchableOpacity>
             </View>
           </View>
         )}
@@ -135,7 +171,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ activeTab, onTabPress, on
             <GameDataValueIcon 
               property1="invite"
               size="L"
-              value={isFirstTimeUser ? "0" : "8"}
+              value={(isFirstTimeUser || isFTUETesting) ? "0" : "8"}
               showIconCash={true}
             />
           </View>
@@ -148,7 +184,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ activeTab, onTabPress, on
             <GameDataValueIcon 
               property1="medal"
               size="L"
-              value={isFirstTimeUser ? "0" : "25"}
+              value={(isFirstTimeUser || isFTUETesting) ? "0" : "25"}
               showIconCash={true}
             />
           </TouchableOpacity>
@@ -167,16 +203,16 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ activeTab, onTabPress, on
         
         <View style={styles.rewardCardsContainer}>
           <View style={styles.rewardCardsRow}>
-            <RewardCardXS state={isFirstTimeUser ? "default" : "completed"} medalValue="1" rewardValue="100" />
-            <RewardCardXS state={isFirstTimeUser ? "default" : "ready-to-claim"} medalValue="3" rewardValue="200" />
-            <RewardCardXS medalValue="5" rewardValue="320" />
-            <RewardCardXS medalValue="15" rewardValue="480" />
+            <RewardCardXS state={(isFirstTimeUser || isFTUETesting) ? "default" : "completed"} medalValue="1" rewardValue="100" />
+            <RewardCardXS state={(isFirstTimeUser || isFTUETesting) ? "default" : "ready-to-claim"} medalValue="3" rewardValue="200" />
+            <RewardCardXS state={isFTUETesting ? "default" : undefined} medalValue="5" rewardValue="320" />
+            <RewardCardXS state={isFTUETesting ? "default" : undefined} medalValue="15" rewardValue="480" />
           </View>
           <View style={styles.rewardCardsRow}>
-            <RewardCardXS medalValue="20" rewardValue="800" />
-            <RewardCardXS medalValue="25" rewardValue="1600" />
-            <RewardCardXS medalValue="30" rewardValue="2400" />
-            <RewardCardXS medalValue="35" rewardValue="3600" />
+            <RewardCardXS state={isFTUETesting ? "default" : undefined} medalValue="20" rewardValue="800" />
+            <RewardCardXS state={isFTUETesting ? "default" : undefined} medalValue="25" rewardValue="1600" />
+            <RewardCardXS state={isFTUETesting ? "default" : undefined} medalValue="30" rewardValue="2400" />
+            <RewardCardXS state={isFTUETesting ? "default" : undefined} medalValue="35" rewardValue="3600" />
           </View>
         </View>
         
@@ -356,7 +392,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ activeTab, onTabPress, on
             activeOpacity={1} 
             onPress={handleCloseYourReferralsPopup}
           />
-          <PopupYourReferrals onClose={handleCloseYourReferralsPopup} />
+          <PopupYourReferrals onClose={handleCloseYourReferralsPopup} isFirstTimeUser={isFirstTimeUser} />
         </View>
       </Modal>
     </View>
@@ -379,6 +415,16 @@ const styles = StyleSheet.create({
   section: {
     marginBottom: 24,
   },
+  avatarFrame: {
+    width: 40,
+    height: 40,
+  },
+  userNameRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 12,
+  },
   horizontalScrollContent: {
     paddingHorizontal: 0,
     paddingLeft: 20,
@@ -393,6 +439,37 @@ const styles = StyleSheet.create({
     borderBottomColor: "#949AD2",
     paddingVertical: 16,
     marginHorizontal: -20,
+  },
+  noAdventuresContainer: {
+    backgroundColor: "#D8DFFA",
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderTopColor: "#949AD2",
+    borderBottomColor: "#949AD2",
+    paddingVertical: 40,
+    marginHorizontal: -20,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 16,
+  },
+  noAdventuresText: {
+    fontSize: FontSize.fs_16,
+    fontFamily: FontFamily.poppinsSemiBold,
+    color: "#8E9297",
+    textAlign: "center",
+  },
+  startGameButton: {
+    backgroundColor: "#563CAB",
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  startGameButtonText: {
+    fontSize: 14,
+    fontFamily: FontFamily.poppinsBold,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    textAlign: "center",
   },
   sectionTitle: {
     fontSize: FontSize.fs_16,
@@ -410,7 +487,19 @@ const styles = StyleSheet.create({
     fontSize: FontSize.fs_16,
     fontFamily: FontFamily.poppinsSemiBold,
     color: "#563CAB",
-    marginBottom: 12,
+  },
+  signInButton: {
+    backgroundColor: "#563CAB",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 6,
+  },
+  signInButtonText: {
+    fontSize: 14,
+    fontFamily: FontFamily.poppinsBold,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    textAlign: "center",
   },
   inviteTitle: {
     fontSize: FontSize.fs_16,

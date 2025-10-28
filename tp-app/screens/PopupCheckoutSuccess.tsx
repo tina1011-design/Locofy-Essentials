@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   },
   popupCheckoutSuccess: {
     width: Width.width_393,
-    backgroundColor: Color.colorDarkslateblue,
+    backgroundColor: "rgba(32, 20, 59, 0.5)",
     flex: 1,
     maxWidth: 393,
   },

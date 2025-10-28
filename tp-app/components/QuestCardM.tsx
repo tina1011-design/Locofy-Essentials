@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ValueIcon from "./ValueIcon";
@@ -21,6 +21,13 @@ export type QuestCardMType = {
   showProgressBar?: boolean;
   showIconCash?: boolean;
   progressWidth?: number;
+  questTitle?: string;
+  showButton?: boolean;
+  onButtonPress?: () => void;
+  coinValueColor?: string;
+  showCountdown?: boolean;
+  countdownText?: string;
+  coinValue?: string;
 
   /** Variant props */
   property1?: "blue" | "alert" | "completed" | "expired";
@@ -31,6 +38,13 @@ const QuestCardM = ({
   showProgressBar = true,
   showIconCash,
   progressWidth = 30,
+  questTitle = "Quest Title",
+  showButton = false,
+  onButtonPress,
+  coinValueColor,
+  showCountdown = false,
+  countdownText = "",
+  coinValue = "2400",
 }: QuestCardMType) => {
   const isAlert = property1 === "alert";
   const isCompleted = property1 === "completed";
@@ -99,8 +113,9 @@ const QuestCardM = ({
             <ValueIcon
               property1="coin"
               size="M"
-              value="2400"
+              value={coinValue}
               showIconCash={showIconCash}
+              textColor={coinValueColor}
             />
           </View>
           <View style={[styles.cardInfo, styles.infoFlexBox]}>
@@ -111,7 +126,19 @@ const QuestCardM = ({
               {isExpired && (
                 <MaterialCommunityIcons name="cancel" size={16} color="#392F67" />
               )}
-              <Text style={[styles.questTitle, titleStyles]}>Quest Title</Text>
+              <Text style={[styles.questTitle, titleStyles]}>{questTitle}</Text>
+              {showCountdown && (
+                <View style={styles.countdownContainer}>
+                  <Text style={styles.countdownText}>2X Rewards in </Text>
+                  <MaterialCommunityIcons name="clock-outline" size={12} color="#4CAF50" />
+                  <Text style={styles.countdownText}> {countdownText}</Text>
+                </View>
+              )}
+              {showButton && (
+                <TouchableOpacity style={styles.getRewardsButton} onPress={onButtonPress}>
+                  <Text style={styles.getRewardsText}>Get Rewards</Text>
+                </TouchableOpacity>
+              )}
               {isAlert && (
                 <View style={styles.timeContainer}>
                   <MaterialCommunityIcons name="timer-sand-complete" size={16} color="#C33232" />
@@ -129,7 +156,7 @@ const QuestCardM = ({
                 />
               )}
             </View>
-            {!isCompleted && !isExpired && (
+            {!isCompleted && !isExpired && showProgressBar && (
               <ProgressBar1 property1="blue" progressWidth={progressWidth} />
             )}
           </View>
@@ -233,6 +260,31 @@ const styles = StyleSheet.create({
     color: Color.textQuestCardDefault,
     textAlign: "left",
     flex: 1,
+  },
+  getRewardsButton: {
+    backgroundColor: "#F8D659",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
+    marginLeft: 8,
+  },
+  getRewardsText: {
+    fontSize: FontSize.fs_12,
+    fontWeight: "700",
+    fontFamily: FontFamily.poppinsBold,
+    color: "#20143B",
+    textAlign: "center",
+  },
+  countdownContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: 8,
+  },
+  countdownText: {
+    fontSize: 10,
+    fontWeight: "600",
+    fontFamily: FontFamily.poppinsSemiBold,
+    color: "#4CAF50",
   },
 });
 

@@ -20,6 +20,7 @@ import {
 export type GameCardLInstallFeaturedType = {
   valueIconSize1?: "M" | "L";
   valueIconShowIconCash1?: boolean;
+  questTitle?: string;
 
   /** Variant props */
   property1?: string;
@@ -29,6 +30,7 @@ const GameCardLInstallFeatured = ({
   property1 = "Install",
   valueIconSize1 = "M",
   valueIconShowIconCash1,
+  questTitle = "Make a Purchase",
 }: GameCardLInstallFeaturedType) => {
   const navigation = useNavigation();
 
@@ -53,7 +55,7 @@ const GameCardLInstallFeatured = ({
         </View>
         <View style={styles.purpleBar}>
           <Ionicons name="trophy" size={16} color="white" />
-          <Text style={styles.questTitle}>Make a Purchase</Text>
+          <Text style={styles.questTitle}>{questTitle}</Text>
           <View style={styles.timeContainer}>
             <Ionicons name="time" size={16} color="white" />
             <Text style={styles.timeText}>6 days</Text>

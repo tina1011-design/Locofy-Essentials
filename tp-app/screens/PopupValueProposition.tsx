@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
   },
   popupValueProposition: {
     width: "100%",
-    backgroundColor: Color.colorDarkslateblue,
+    backgroundColor: "rgba(32, 20, 59, 0.5)",
     maxWidth: "100%",
     flex: 1,
   },

@@ -15,10 +15,11 @@ import {
 
 interface PopupYourReferralsProps {
   onClose?: () => void;
+  isFirstTimeUser?: boolean;
 }
 
-const PopupYourReferrals: React.FC<PopupYourReferralsProps> = ({ onClose }) => {
-  const referralData = [
+const PopupYourReferrals: React.FC<PopupYourReferralsProps> = ({ onClose, isFirstTimeUser = false }) => {
+  const normalReferralData = [
     { id: '1', username: 'Username1', medals: '15' },
     { id: '2', username: 'Username2', medals: '8' },
     { id: '3', username: 'Username3', medals: '22' },
@@ -32,6 +33,8 @@ const PopupYourReferrals: React.FC<PopupYourReferralsProps> = ({ onClose }) => {
     { id: '11', username: 'Username11', medals: '14' },
     { id: '12', username: 'Username12', medals: '11' },
   ];
+  
+  const referralData = isFirstTimeUser ? [] : normalReferralData;
 
   const renderItem = ({ item, index }: { item: any; index: number }) => (
     <View style={[styles.listRow, index % 2 === 0 ? styles.listRowOdd : styles.listRowEven]}>
@@ -68,15 +71,21 @@ const PopupYourReferrals: React.FC<PopupYourReferralsProps> = ({ onClose }) => {
                 <Text style={styles.headerText}>Username</Text>
                 <Text style={styles.headerText}>Medals</Text>
               </View>
-              <FlatList
-                data={referralData}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                style={styles.listScrollView}
-                showsVerticalScrollIndicator={true}
-                nestedScrollEnabled={true}
-                scrollEnabled={true}
-              />
+              {referralData.length === 0 ? (
+                <View style={styles.emptyListContainer}>
+                  <Text style={styles.emptyListText}>No records found</Text>
+                </View>
+              ) : (
+                <FlatList
+                  data={referralData}
+                  renderItem={renderItem}
+                  keyExtractor={(item) => item.id}
+                  style={styles.listScrollView}
+                  showsVerticalScrollIndicator={true}
+                  nestedScrollEnabled={true}
+                  scrollEnabled={true}
+                />
+              )}
             </View>
             
             <View style={styles.paragraphContainer}>
@@ -139,11 +148,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: FontFamily.poppinsSemiBold,
     fontWeight: "600",
-    fontSize: FontSize.fs_14,
+    fontSize: 14,
   },
   popupYourReferrals: {
     width: Width.width_393,
-    backgroundColor: Color.colorDarkslateblue,
+    backgroundColor: "rgba(32, 20, 59, 0.5)",
     flex: 1,
     maxWidth: 393,
   },
@@ -223,7 +232,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: FontFamily.poppinsSemiBold,
     fontWeight: "600",
-    fontSize: FontSize.fs_14,
+    fontSize: 14,
     color: "#75787C",
   },
   listScrollView: {
@@ -266,7 +275,7 @@ const styles = StyleSheet.create({
   usernameText: {
     fontFamily: FontFamily.poppinsBold,
     fontWeight: "700",
-    fontSize: FontSize.fs_14,
+    fontSize: 14,
     color: "#545175",
   },
   medalIconSmall: {
@@ -276,7 +285,7 @@ const styles = StyleSheet.create({
   medalNumberText: {
     fontFamily: FontFamily.poppinsSemiBold,
     fontWeight: "600",
-    fontSize: FontSize.fs_14,
+    fontSize: 14,
     color: "#FFFFFF",
   },
   coinIcon: {
@@ -292,6 +301,19 @@ const styles = StyleSheet.create({
   inviteAndEarnButton: {
     width: 260,
     height: 65,
+  },
+  emptyListContainer: {
+    flex: 1,
+    backgroundColor: "#ABB3D8",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 40,
+  },
+  emptyListText: {
+    fontFamily: FontFamily.poppinsRegular,
+    fontSize: 14,
+    color: "#545175",
+    textAlign: "center",
   },
 });
 
